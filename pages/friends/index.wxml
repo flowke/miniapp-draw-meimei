@@ -1,4 +1,12 @@
 <!--index.wxml-->
 <view class="container">
-  <view wx:for="{{friendsList}}" wx:key="id">{{item.name}}</view>
+  <view class="list_item" wx:for="{{friends}}" wx:key="id">
+    <view class="avatar_wrap">
+      <image src="{{item.avatar}}" class="avatar"/>
+    </view>
+    <view class="meta">
+      <view class="meta_title">{{item.name}}</view>
+      <view class="meta_desc">{{item.time}}</view>
+    </view>
+  </view>
 </view>
