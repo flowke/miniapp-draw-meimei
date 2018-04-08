@@ -1,12 +1,29 @@
 {
-  "pages":[
-    "pages/index/index",
+  "pages": [
+    "pages/friends/index",
     "pages/logs/logs"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+    "navigationBarTitleText": "画梅",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "selectedColor": "#d81e06",
+    "list": [
+      {
+        "pagePath": "pages/friends/index",
+        "text": "好友",
+        "iconPath": "image/collection.png",
+        "selectedIconPath": "image/collection_fill.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "text": "我的",
+        "iconPath": "image/emoji.png",
+        "selectedIconPath": "image/emoji_fill.png"
+      }
+    ]
   }
 }
