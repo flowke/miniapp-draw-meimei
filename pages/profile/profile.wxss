@@ -1,3 +1,7 @@
+.container{
+  height: 100%;
+  /* background-color: red */
+}
 
 .profile_card_box{
   display: flex;
@@ -28,5 +32,42 @@
   margin-bottom: 6rpx;
 }
 .profile_card_box .desc{
-  font-size: 11pt;
+  font-size: 10pt;
+}
+
+.done_tags_box{
+  margin: 30rpx;
+  margin-right: 20rpx;
+  display: flex;
+  /* justify-content: space-between; */
+  flex-wrap: wrap;
+}
+.done_tags_box .tag{
+  margin-right: 16rpx;
+  margin-bottom: 20rpx;
+  padding: 0 20rpx;
+  border: 1rpx solid #C9C8C8;
+  border-radius: 30rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 12pt;
+  color: #576269;
+}
+
+
+/* 右下角添加按钮 */
+.add_button{
+  position: absolute;
+  right: 30rpx;
+  bottom: 50rpx;
+  width: 44pt;
+  height: 44pt;
+  background-color: #4B9EFD;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26pt;
+  color: #fff;
+  box-shadow: 5rpx 6rpx 14rpx 1rpx rgba(74, 157, 252, 0.53);
 }

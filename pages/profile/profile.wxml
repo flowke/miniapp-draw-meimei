@@ -1,6 +1,6 @@
 <view class="container">
-  <view class="profile_card_box">
 
+  <view class="profile_card_box">
     <!-- 头像 -->
     <view class="avatar_wrap">
       <image
@@ -11,5 +11,23 @@
 
     <text class="title color_semi">Wade Wilson</text>
     <text class="desc color_light">UI/UX designer</text>
+
+    <view class="done_tags_box">
+      <view class="tag color_semi">some</view>
+      <view class="tag color_semi">somefds</view>
+      <view class="tag color_semi">so</view>
+      <view class="tag color_semi">somefs</view>
+      <view class="tag color_semi">soss</view>
+      <view class="tag color_semi">some</view>
+      <view class="tag color_semi">somefdsff</view>
+      <view class="tag color_semi">some</view>
+      <view class="tag color_semi">some</view>
+    </view>
   </view>
+
+  <map name=""></map>
+
+
+  <view class="add_button">+</view>
+
 </view>
