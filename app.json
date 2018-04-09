@@ -1,16 +1,15 @@
 {
   "pages": [
-    "pages/friends/index",
-    "pages/logs/logs"
+    "pages/profile/profile",
+    "pages/friends/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "画梅",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#4B9EFD",
+    "navigationBarTitleText": "画梅"
   },
   "tabBar": {
-    "selectedColor": "#d81e06",
+    "selectedColor": "#4B9EFD",
     "list": [
       {
         "pagePath": "pages/friends/index",
@@ -19,7 +18,7 @@
         "selectedIconPath": "image/collection_fill.png"
       },
       {
-        "pagePath": "pages/logs/logs",
+        "pagePath": "pages/profile/profile",
         "text": "我的",
         "iconPath": "image/emoji.png",
         "selectedIconPath": "image/emoji_fill.png"

@@ -1,28 +1,43 @@
 /**index.wxss**/
 
-.container{}
+.container{
+  /* background: red */
+}
 
 .list_item{
   display: flex;
-  padding: 20rpx 30rpx;
+  padding: 24rpx 30rpx;
 
 }
+
+/* 头像 */
 .avatar_wrap{
   border-radius: 50%;
-  width: 120rpx;
-  height: 120rpx;
+  width: 118rpx;
+  height: 118rpx;
   overflow: hidden;
   margin-right: 20rpx;
+  /* border: 2rpx solid #49ADDE; */
 }
 .avatar{
   max-width: 100%;
+
 }
 
+/* 好友的信息 */
+.meta{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .meta_title{
-  color: #222222;
+  color: #3E4757;
   font-size: 34rpx;
+  line-height: 50rpx;
+  margin-bottom: 10rpx;
 }
 .meta_desc{
-  color: #999999;
+  color: #9299A2;
   font-size: 26rpx;
+  line-height: 37rpx;
 }

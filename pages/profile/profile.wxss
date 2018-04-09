@@ -1,0 +1,32 @@
+
+.profile_card_box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.profile_card_box .avatar_wrap{
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5rpx 20rpx 0 rgba(0,0,0, 0.16);
+  margin-top: 80rpx;
+  margin-bottom: 40rpx;
+}
+.profile_card_box .avatar{
+  width: 300rpx;
+  height: 300rpx;
+}
+.profile_card_box .title{
+  font-size: 18pt;
+  font-weight: bold;
+  margin-bottom: 6rpx;
+}
+.profile_card_box .desc{
+  font-size: 11pt;
+}

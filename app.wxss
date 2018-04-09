@@ -1,5 +1,18 @@
 /**app.wxss**/
 .container {
 
-  
+
+}
+
+.color_light{
+  color: #b2b2b2;
+}
+.color_grey{
+  color: #888888;
+}
+.color_semi{
+  color: #353535;
+}
+.color_black{
+  color: #000;
 }

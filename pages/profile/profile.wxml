@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="profile_card_box">
+
+    <!-- 头像 -->
+    <view class="avatar_wrap">
+      <image
+        class="avatar" src="https://pic.qqtn.com/up/2017-12/15138357828139708.jpg"
+        mode="aspectFill"
+      />
+    </view>
+
+    <text class="title color_semi">Wade Wilson</text>
+    <text class="desc color_light">UI/UX designer</text>
+  </view>
+</view>

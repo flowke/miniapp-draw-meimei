@@ -4,6 +4,7 @@
     <view class="avatar_wrap">
       <image src="{{item.avatar}}" class="avatar"/>
     </view>
+
     <view class="meta">
       <view class="meta_title">{{item.name}}</view>
       <view class="meta_desc">{{item.time}}</view>
