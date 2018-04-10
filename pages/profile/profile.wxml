@@ -25,9 +25,16 @@
     </view>
   </view>
 
-  <map name=""></map>
+  <!-- <map name=""></map> -->
 
-
-  <view class="add_button">+</view>
+  <view
+    class="add_button"
+    bind:tap="getLocation"
+  >
+    <!-- <navigator
+      hover-class="none"
+      url="/pages/mark/mark"
+    >+</navigator> -->
+  </view>
 
 </view>
