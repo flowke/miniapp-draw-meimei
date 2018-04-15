@@ -13,9 +13,9 @@ Page({
     hasUserInfo: false
   },
 
-  onLoad(){
+  onShow(){
 
-    api.showLoading();
+    console.log('show');
     if(app.globalData.userInfo){
       this.setData({
         hasAuthUserInfo: true,
@@ -26,26 +26,26 @@ Page({
       authUserInfo()
         .then(ret=>{
           // 授权用户成功
-          api.getUserInfo()
+          // 获取用户信息
+          api.getUserInfo({withCredentials: true})
           .then(ret=>{
             console.log(ret);
             this.setData({
               userInfo: ret.userInfo,
               hasAuthUserInfo: true,
-              hasAuthUserInfo: true
+              hasUserInfo: true
             });
             app.updateGlobalUserInfo(ret.userInfo)
           })
           .catch(e=>{
+            // 获取用户信息失败
             console.log(e);
-          })
+          });
 
         })
         .catch(()=>{
           // 授权失败
           console.log('fali');
-
-
           this.setData({
             hasAuthUserInfo: false
           });
@@ -75,7 +75,7 @@ Page({
           data: {code: ret.code},
           method: 'POST',
           success: (ret)=>{
-            console.log(ret);
+            console.log(ret.data);
           }
         })
       }

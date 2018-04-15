@@ -11,24 +11,6 @@ App({
 
   onShow(){
 
-    // 授权用户细信息
-    authUserInfo()
-      .then(()=>{
-        // 用户授权了
-        // 开始获取用户信息
-        api.getUserInfo()
-          .then(({userInfo})=>{
-
-            this.updateGlobalUserInfo(userInfo);
-
-          })
-          .catch(()=>{
-            // 没有获取到用户信息
-          })
-      })
-      .catch(()=>{
-        // 用户未授权
-      })
 
   },
 
