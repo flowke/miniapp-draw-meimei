@@ -10,18 +10,21 @@ Page({
   data: {
     hasAuthUserInfo: true,
     userInfo: {},
-    hasUserInfo: false
+    hasUserInfo: false,
+    isShowAddingModel: false,
+    symbols: [],
   },
 
+  // 页面显示时候
   onShow(){
 
-    console.log('show');
+
     if(app.globalData.userInfo){
       this.setData({
         hasAuthUserInfo: true,
         hasUserInfo: true,
         userInfo: app.globalData.userInfo
-      })
+      });
     }else{
       authUserInfo()
         .then(ret=>{
@@ -55,6 +58,8 @@ Page({
 
   },
 
+  // 打开授权设置,
+  // 期望授权用户信息
   openSetting(){
     api.openSetting()
       .then(({authSetting})=>{
@@ -64,9 +69,48 @@ Page({
           })
         }
       });
-
   },
 
+  // 添加一个要标记的符号
+  addSymbol(){
+    let {symbols, inputSymbolName} = this.data;
+
+    this.setData({
+      isShowAddingModel: false,
+      symbols: [
+        {
+          id: Symbol(),
+          name: inputSymbolName
+        },
+        ...symbols
+      ]
+    })
+  },
+
+  // 显示添加 symbol 的 model
+  showAddModel(){
+
+    this.setData({
+      isShowAddingModel: true
+    });
+  },
+
+  // 取消条件 symbol
+  cancelAddSymbol(){
+    this.setData({
+      isShowAddingModel: false
+    });
+  },
+
+  // 绑定输入框的值
+  inputval(e){
+    let {detail, target} = e;
+    this.setData({
+      [target.dataset.name]: detail.value
+    })
+  },
+
+  //
   getLocation(ev){
     wx.login({
       success: ret=>{

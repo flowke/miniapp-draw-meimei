@@ -35,6 +35,7 @@
   font-size: 10pt;
 }
 
+/* symbol 的标签盒子 */
 .done_tags_box{
   margin: 30rpx;
   margin-right: 20rpx;
@@ -43,7 +44,7 @@
   flex-wrap: wrap;
 }
 .done_tags_box .tag{
-  margin-right: 16rpx;
+  margin-right: 30rpx;
   margin-bottom: 20rpx;
   padding: 0 26rpx;
   border: 1rpx solid #C9C8C8;
@@ -52,6 +53,7 @@
   line-height: 60rpx;
   font-size: 12pt;
   color: #576269;
+  background-color: #FEFEFE;
 }
 
 /* 右下角添加按钮 */
@@ -75,11 +77,45 @@
   align-items: center;
 }
 
-
+/* 授权按钮 */
 .auth_wrap{
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: #F5FBFE
+}
+
+/* model 的遮罩 */
+.model_mask{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0,0,0, 0.12);
+}
+.model{
+  padding: 40rpx;
+  width: 70%;
+  background-color: #fff;
+  border-radius: 10rpx;
+}
+.model input{
+  border: 1rpx solid #BFBFBF;
+  border-radius: 10rpx;
+  margin-bottom: 20rpx;
+  padding: 10rpx 20rpx;
+}
+.buttons_wrap{
+  display: flex;
+  justify-content: center;
+}
+.buttons_wrap button{
+  margin: 0 10rpx;
+  padding: 0 60rpx;
 }

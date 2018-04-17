@@ -15,23 +15,24 @@
       <text class="desc color_light">{{userInfo.country}}</text>
 
       <view class="done_tags_box">
-        <view class="tag color_semi">some</view>
-        <view class="tag color_semi">somefds</view>
-        <view class="tag color_semi">so</view>
-        <view class="tag color_semi">somefs</view>
-        <view class="tag color_semi">soss</view>
-        <view class="tag color_semi">some</view>
-        <view class="tag color_semi">somefdsff</view>
-        <view class="tag color_semi">some</view>
-        <view class="tag color_semi">some</view>
+
+        <navigator
+          class="tag color_semi"
+          wx:for="{{symbols}}"
+          wx:key="id"
+        >
+          {{item.name}}
+
+        </navigator>
       </view>
     </view>
 
     <!-- <map name=""></map> -->
 
+    <!-- 添加按钮 -->
     <view
       class="add_button"
-      bind:tap="getLocation"
+      bind:tap="showAddModel"
     >
       <!-- <navigator
         hover-class="none"
@@ -50,5 +51,33 @@
     </view>
   </block>
 
+  <!-- 添加 symbol 的 model -->
+
+  <view class="model_mask" wx:if="{{isShowAddingModel}}">
+    <view class="model">
+      <input
+        data-name="inputSymbolName"
+        type="text"
+        focus="{{true}}"
+        placeholder="输入标签名"
+        placeholder-style="color:#CFD5D9;"
+        cursor-spacing="100"
+        bindinput="inputval"
+        bindconfirm="addSymbol"
+        />
+      <view class="buttons_wrap">
+        <button
+          size="mini"
+          bind:tap="cancelAddSymbol"
+        >取消</button>
+        <button
+          type="primary"
+          size="mini"
+          bind:tap="addSymbol"
+        >确定</button>
+      </view>
+
+    </view>
+  </view>
 
 </view>
