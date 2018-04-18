@@ -4,16 +4,27 @@ const api = require('../../helper/api');
 Page({
   data: {
     hasAuthLocation: true,
-    initLocation: {
-
-    }
+    initLocation: {},
+    controls: [
+      {
+        id: 1,
+        position: {
+          left: 50,
+          top: 500,
+          width: 40,
+          height: 40
+        },
+        clickable: true,
+        iconPath: './img/location.png'
+      }
+    ]
   },
   onLoad(){
 
   },
 
   onShow(){
-    console.log('show mark');
+
     auth('userLocation')
       .then(ret=>{
         console.log('授权了地址');
@@ -24,7 +35,8 @@ Page({
               initLocation: {
                 latitude, longitude
               }
-            })
+            });
+
           })
           .catch(e=>{
             console.log(e);
@@ -38,7 +50,9 @@ Page({
         this.setData({
           hasAuthLocation: false
         });
+
         console.log('没有地址授权');
+
       })
   },
 
@@ -49,5 +63,11 @@ Page({
         hasAuthLocation: true
       });
     }
+  },
+
+  maptap(e){
+    console.log(e);
+    // let ctx = wx.createMapContext('map');
+    api.chooseLocation()
   }
 })

@@ -1,0 +1,11 @@
+module.exports = [
+  {
+    id: 1,
+    position: {
+      left: 50,
+      top: 400,
+      width: 30,
+      height: 40
+    }
+  }
+];

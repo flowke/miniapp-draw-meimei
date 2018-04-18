@@ -1,13 +1,18 @@
+<wxs src="./mapControls.wxs" module="sdata" />
+
 <view class="container">
   <block wx:if="{{hasAuthLocation}}">
     <map
+      id="map"
       class="map"
       show-location="{{true}}"
-      controls="{{}}"
+      controls="{{controls}}"
       longitude="{{initLocation.longitude}}"
       latitude="{{initLocation.latitude}}"
+      bindcontroltap="maptap"
 
     ></map>
+    <view class="t">dfdsf</view>
   </block>
   <block wx:if="{{!hasAuthLocation}}">
     <auth-page

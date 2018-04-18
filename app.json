@@ -2,8 +2,7 @@
   "pages": [
     "pages/profile/profile",
     "pages/friends/index",
-    "pages/mark/mark",
-    "pages/components/auth"
+    "pages/mark/mark"
   ],
   "window": {
     "backgroundTextStyle": "light",

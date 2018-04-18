@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "auth-page": "/pages/components/auth"
+    "auth-page": "/pages/components/auth/auth"
   }
 }

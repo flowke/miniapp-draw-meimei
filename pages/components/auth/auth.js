@@ -1,4 +1,4 @@
-const api = require('../../helper/api');
+const api = require('../../../helper/api');
 
 Component({
   properties: {
