@@ -16,14 +16,16 @@
 
       <view class="done_tags_box">
 
-        <navigator
+        <view
           class="tag color_semi"
           wx:for="{{symbols}}"
           wx:key="id"
+          data-id="{{item.id}}"
+          bind:tap="gotoMark"
         >
           {{item.name}}
+        </view>
 
-        </navigator>
       </view>
     </view>
 
@@ -43,12 +45,10 @@
 
   <!-- 如果用户没有授权 -->
   <block wx:if="{{hasAuthUserInfo===false}}">
-    <view class="auth_wrap">
-      <button
-        type= "primary"
-        bind:tap="openSetting"
-      >请授权使用</button>
-    </view>
+    <auth-page
+      bind:getAuth="getAuth"
+      scope="userInfo"
+    />
   </block>
 
   <!-- 添加 symbol 的 model -->

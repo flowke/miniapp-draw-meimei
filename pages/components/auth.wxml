@@ -1,0 +1,8 @@
+<!-- 如果用户没有授权 -->
+
+<view class="auth_wrap">
+  <button
+    type= "primary"
+    bind:tap="openSetting"
+  >请授权使用</button>
+</view>

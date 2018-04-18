@@ -1,4 +1,4 @@
-const authUserInfo = require('../../api/authUserInfo');
+const auth = require('../../api/auth');
 const api = require('../../helper/api');
 
 let p = 'https://pic.qqtn.com/up/2017-12/15138357828139708.jpg';
@@ -15,20 +15,30 @@ Page({
     symbols: [],
   },
 
+  onLoad(){
+    api.getStorage({key: 'symbols'})
+      .then(({data})=>{
+        this.setData({
+          symbols: data
+        })
+      })
+      .catch(e=>e);
+  },
+
   // 页面显示时候
   onShow(){
 
+    auth('userInfo')
+      .then(ret=>{
+        // 授权成功
 
-    if(app.globalData.userInfo){
-      this.setData({
-        hasAuthUserInfo: true,
-        hasUserInfo: true,
-        userInfo: app.globalData.userInfo
-      });
-    }else{
-      authUserInfo()
-        .then(ret=>{
-          // 授权用户成功
+        if(app.globalData.userInfo){
+          this.setData({
+            hasAuthUserInfo: true,
+            hasUserInfo: true,
+            userInfo: app.globalData.userInfo
+          });
+        }else{
           // 获取用户信息
           api.getUserInfo({withCredentials: true})
           .then(ret=>{
@@ -45,30 +55,35 @@ Page({
             console.log(e);
           });
 
-        })
-        .catch(()=>{
-          // 授权失败
-          console.log('fali');
-          this.setData({
-            hasAuthUserInfo: false
-          });
+        }
+
+      })
+      .catch(()=>{
+        // 授权失败
+        this.setData({
+          hasAuthUserInfo: false
         });
-    }
-
-
+      });
   },
 
-  // 打开授权设置,
+  // 跳转到符号标记的地图页
+  gotoMark({target}){
+    let {id} = target.dataset;
+    api.navigateTo({
+      url: `/pages/mark/mark?id=${id}`
+    });
+  },
+
+  // 用户在授权面板操作返回页面后调用
   // 期望授权用户信息
-  openSetting(){
-    api.openSetting()
-      .then(({authSetting})=>{
-        if(authSetting['scope.userInfo']){
-          this.setData({
-            hasAuthUserInfo: true
-          })
-        }
-      });
+  // event 的 detail 参数为 bool
+  // true 代表取得了授权
+  // false 代表没取得授权
+  getAuth(event){
+    let {detail} = event;
+    this.setData({
+      hasAuthUserInfo: false
+    })
   },
 
   // 添加一个要标记的符号
@@ -79,12 +94,17 @@ Page({
       isShowAddingModel: false,
       symbols: [
         {
-          id: Symbol(),
+          id: Math.random(),
           name: inputSymbolName
         },
         ...symbols
       ]
-    })
+    },()=>{
+      api.setStorage({
+        key: 'symbols',
+        data: this.data.symbols
+      })
+    });
   },
 
   // 显示添加 symbol 的 model

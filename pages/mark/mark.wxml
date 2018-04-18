@@ -1,3 +1,19 @@
 <view class="container">
-  mark page
+  <block wx:if="{{hasAuthLocation}}">
+    <map
+      class="map"
+      show-location="{{true}}"
+      controls="{{}}"
+      longitude="{{initLocation.longitude}}"
+      latitude="{{initLocation.latitude}}"
+
+    ></map>
+  </block>
+  <block wx:if="{{!hasAuthLocation}}">
+    <auth-page
+      scope="userLocation"
+      bind:getAuth="getAuth"
+    />
+  </block>
+
 </view>

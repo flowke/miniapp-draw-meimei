@@ -1,6 +1,6 @@
 //app.js
 require('./lib/regenerator-runtime')
-const authUserInfo = require('./api/authUserInfo');
+const auth = require('./api/auth');
 const api = require('./helper/api');
 
 

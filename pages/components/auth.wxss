@@ -1,0 +1,8 @@
+/* 授权按钮 */
+.auth_wrap{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #F5FBFE
+}

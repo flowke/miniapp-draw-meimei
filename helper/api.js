@@ -10,6 +10,7 @@ let bindAPI = (apiName, bindObj=wx)=>(o={})=>new Promise((resolve, reject)=>{
 
 // 接口的命名空间
 let apiSpace = {
+  // 网络
   net: [
     'request',
 
@@ -23,6 +24,27 @@ let apiSpace = {
     'onSocketMessage',
     'closeSocket',
     'onSocketClose'
+  ],
+
+  // 数据缓存
+  dataCache:[
+    'setStorage',
+    'setStorageSync',
+    'getStorage',
+    'getStorageSync',
+    'getStorageInfo',
+    'getStorageInfoSync',
+    'removeStorage',
+    'removeStorageSync',
+    'clearStorage',
+    'clearStorageSync',
+  ],
+
+  // location
+  location:[
+    'getLocation',
+    'chooseLocation',
+    'openLocation',
   ],
 
   // 设备
@@ -72,13 +94,13 @@ let apiSpace = {
   ]
 }
 
+let rawNameArr = [];
 
-module.exports = [
-  ...apiSpace.net,
-  ...apiSpace.device,
-  ...apiSpace.userface,
-  ...apiSpace.openAPI
-].reduce( (accu,elt)=>{
+for(let k in apiSpace){
+  rawNameArr = [...rawNameArr, ...apiSpace[k]]
+}
+
+module.exports = rawNameArr.reduce( (accu,elt)=>{
 
   if(Object.prototype.toString.call(elt)==='[object String]'){
     accu[elt] = bindAPI(elt)
