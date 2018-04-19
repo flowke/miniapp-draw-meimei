@@ -1,26 +1,22 @@
 const auth = require('../../api/auth');
 const api = require('../../helper/api');
 
+
 Page({
   data: {
     hasAuthLocation: true,
-    initLocation: {},
-    controls: [
-      {
-        id: 1,
-        position: {
-          left: 50,
-          top: 500,
-          width: 40,
-          height: 40
-        },
-        clickable: true,
-        iconPath: './img/location.png'
-      }
-    ]
+    showLocate: {},
+    markers: [],
+    polyline: [],
+    markerData:[],
+    includePoints: {points:[]}
   },
   onLoad(){
 
+  },
+
+  onReady(){
+    this.mapctx = wx.createMapContext('map');
   },
 
   onShow(){
@@ -32,7 +28,7 @@ Page({
           .then(({latitude, longitude})=>{
 
             this.setData({
-              initLocation: {
+              showLocate: {
                 latitude, longitude
               }
             });
@@ -51,11 +47,14 @@ Page({
           hasAuthLocation: false
         });
 
+
         console.log('没有地址授权');
 
-      })
+      });
   },
 
+  // 当从授权页面回了
+  // 检查有没有地址授权
   getAuth({detail}){
     console.log(detail);
     if(detail){
@@ -65,9 +64,41 @@ Page({
     }
   },
 
-  maptap(e){
-    console.log(e);
-    // let ctx = wx.createMapContext('map');
+  // 去到自己的位置
+  toMyLocation(e){
+    this.mapctx.moveToLocation();
+  },
+
+  chooseLocation(e){
     api.chooseLocation()
-  }
+      .then(res=>{
+        let {address, latitude, longitude, name} = res;
+
+        let {markerData} = this.data;
+
+        this.setData({
+
+          showLocate: {
+            latitude, longitude
+          },
+          markerData: [
+            {
+              id: Math.random(),
+              address,
+              latitude,
+              longitude,
+              name
+            },
+            ...markerData
+          ]
+        },()=>{
+          this.mapctx.includePoints({
+            points: this.data.markerData,
+            padding: [40]
+          })
+        });
+
+      });
+  },
+
 })

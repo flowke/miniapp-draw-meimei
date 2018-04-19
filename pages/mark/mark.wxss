@@ -8,8 +8,35 @@
   height: 100%;
 }
 
-.t{
+
+.locate_icon_wrap{
   position: absolute;
-  left: 20rpx;
-  top: 50rpx;
+  left: 30rpx;
+  bottom: 80rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 5rpx 5rpx rgba(0, 0, 0, 0.52);
+}
+.icon_size{
+  width: 75%;
+  height: 75%;
+}
+
+.mark_icon_wrap{
+  position: absolute;
+  right: 30rpx;
+  bottom: 80rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 5rpx 5rpx rgba(0, 0, 0, 0.52);
 }

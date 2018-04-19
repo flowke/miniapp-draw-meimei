@@ -1,4 +1,4 @@
-<wxs src="./mapControls.wxs" module="sdata" />
+<wxs src="./mark.wxs" module="tool"></wxs>
 
 <view class="container">
   <block wx:if="{{hasAuthLocation}}">
@@ -6,13 +6,27 @@
       id="map"
       class="map"
       show-location="{{true}}"
-      controls="{{controls}}"
-      longitude="{{initLocation.longitude}}"
-      latitude="{{initLocation.latitude}}"
       bindcontroltap="maptap"
+      markers="{{tool.createMarkers(markerData)}}"
+      polyline="{{[tool.createPolyline(markerData)]}}"
+    >
+      <!-- 回到当前定位 -->
+      <cover-view
+        class="locate_icon_wrap"
+        bind:tap="toMyLocation"
+      >
+        <cover-image class="icon_size" src="./img/locate.png"/>
+      </cover-view>
 
-    ></map>
-    <view class="t">dfdsf</view>
+      <!-- 选择一个位置 -->
+      <cover-view
+        class="mark_icon_wrap"
+        bind:tap="chooseLocation"
+      >
+        <cover-image class="icon_size" src="./img/flag.png"/>
+      </cover-view>
+
+    </map>
   </block>
   <block wx:if="{{!hasAuthLocation}}">
     <auth-page

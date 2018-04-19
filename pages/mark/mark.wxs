@@ -1,0 +1,34 @@
+
+
+module.exports.createPolyline = function (data) {
+  return {
+    points: data.map(function(elt){
+      return {
+        latitude: elt.latitude, longitude: elt.longitude
+      }
+    }),
+    width: 3
+  };
+}
+
+
+module.exports.createMarkers = function (data) {
+
+  return data.map(function(elt){
+    return {
+      id: elt.id,
+      latitude: elt.latitude,
+      longitude: elt.longitude,
+      iconPath: './img/melonPin.png',
+      width: 30,
+      height: 30,
+      callout: {
+        content: elt.name,
+        display: 'BYCLICK',
+        borderRadius: 6,
+        padding: 10,
+      }
+    }
+  });
+
+}
