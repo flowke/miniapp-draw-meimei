@@ -20,38 +20,79 @@
         />
       </view>
 
-      <form>
+      <view class="content_wrap">
+        <view class="title">
+          <input value="国贸"/>
+        </view>
 
-      </form>
+        <view class="address">
+          <input value="福利费简单了解"/>
+        </view>
+
+        <view class="add_time">
+          添加事件
+        </view>
+
+        <scroll-view
+          class="incident_list"
+          scroll-y="{{true}}"
+        >
+          <view class="desc">
+            <text class="time">5月15日</text>
+            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+          </view>
+          <view class="desc">
+            <text class="time">5月15日</text>
+            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+          </view>
+          <view class="desc">
+            <text class="time">5月15日</text>
+            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+          </view>
+          <view class="desc">
+            <text class="time">5月15日</text>
+            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+          </view>
+          <view class="desc">
+            <text class="time">5月15日</text>
+            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+          </view>
+        </scroll-view>
+
+
+
+      </view>
 
     </view>
+    <view style="height:100%">
+      <map
+        id="map"
+        class="map"
+        show-location="{{true}}"
+        bindmarkertap="tapmarker"
+        markers="{{tool.createMarkers(markerData)}}"
+        bindtap="tapmarker"
 
-    <map
-      id="map"
-      class="map"
-      show-location="{{true}}"
-      bindmarkertap="tapmarker"
-      markers="{{tool.createMarkers(markerData)}}"
-      bindtap="tapmarker"
-
-    >
-      <!-- 回到当前定位 -->
-      <cover-view
-        class="locate_icon_wrap"
-        bind:tap="toMyLocation"
       >
-        <cover-image class="icon_size" src="./img/locate.png"/>
-      </cover-view>
+        <!-- 回到当前定位 -->
+        <cover-view
+          class="locate_icon_wrap"
+          bind:tap="toMyLocation"
+        >
+          <cover-image class="icon_size" src="./img/locate.png"/>
+        </cover-view>
 
-      <!-- 选择一个位置 -->
-      <cover-view
-        class="mark_icon_wrap"
-        bind:tap="chooseLocation"
-      >
-        <cover-image class="icon_size" src="./img/flag.png"/>
-      </cover-view>
+        <!-- 选择一个位置 -->
+        <cover-view
+          class="mark_icon_wrap"
+          bind:tap="chooseLocation"
+        >
+          <cover-image class="icon_size" src="./img/flag.png"/>
+        </cover-view>
 
-    </map>
+      </map>
+    </view>
+
 
 
   </block>
