@@ -1,8 +1,8 @@
 {
   "pages": [
-    "pages/mark/mark",
     "pages/profile/profile",
-    "pages/friends/index"
+    "pages/friends/index",
+    "pages/mark/mark"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -9,7 +9,9 @@ Page({
     markers: [],
     polyline: [],
     markerData:[],
-    includePoints: {points:[]}
+    includePoints: {points:[]},
+    markInfo: null,
+    panelAniData: {}
   },
   onLoad(){
 
@@ -17,6 +19,11 @@ Page({
 
   onReady(){
     this.mapctx = wx.createMapContext('map');
+
+    this.panelAni = wx.createAnimation({
+      duration: 0,
+      timingFunction: 'ease-out',
+    });
   },
 
   onShow(){
@@ -69,11 +76,12 @@ Page({
     this.mapctx.moveToLocation();
   },
 
+  // 记录一个地点
   chooseLocation(e){
     api.chooseLocation()
       .then(res=>{
         let {address, latitude, longitude, name} = res;
-
+        console.log(name);
         let {markerData} = this.data;
 
         this.setData({
@@ -91,14 +99,32 @@ Page({
             },
             ...markerData
           ]
-        },()=>{
-          this.mapctx.includePoints({
-            points: this.data.markerData,
-            padding: [40]
-          })
         });
 
       });
   },
 
-})
+  // 点击 marker
+  tapmarker({markerId}){
+
+    // let marker = this.data.markerData.filter(e=>e.id===markerId)[0];
+
+    let ani = this.panelAni.height('70%').step();
+    this.setData({
+      // markInfo: marker,
+      panelAniData: ani.export()
+    });
+  },
+
+  // 关闭 marker 详情面板
+  closePanel(){
+
+    let ani = this.panelAni.height(0).step();
+
+    this.setData({
+      markInfo: null,
+      panelAniData: ani.export()
+    });
+  }
+
+});

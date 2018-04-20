@@ -2,13 +2,38 @@
 
 <view class="container">
   <block wx:if="{{hasAuthLocation}}">
+    <view
+      class="info_panel"
+      animation="{{panelAniData}}"
+    >
+      <!-- 关闭面板的叉叉 -->
+      <view class="cancel_cross" bind:tap="closePanel">
+        <image
+          src="./img/cross.png"
+        />
+      </view>
+
+      <view class="header_img">
+        <image
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScgASmjdAgex5npjjcNA-4psF3fxQD7wZATFFqK_cJt5uhss87"
+          class=""
+        />
+      </view>
+
+      <form>
+
+      </form>
+
+    </view>
+
     <map
       id="map"
       class="map"
       show-location="{{true}}"
-      bindcontroltap="maptap"
+      bindmarkertap="tapmarker"
       markers="{{tool.createMarkers(markerData)}}"
-      polyline="{{[tool.createPolyline(markerData)]}}"
+      bindtap="tapmarker"
+
     >
       <!-- 回到当前定位 -->
       <cover-view
@@ -27,6 +52,8 @@
       </cover-view>
 
     </map>
+
+
   </block>
   <block wx:if="{{!hasAuthLocation}}">
     <auth-page
