@@ -5,7 +5,7 @@
 	},
 	"setting": {
 		"urlCheck": false,
-		"es6": false,
+		"es6": true,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true
@@ -38,7 +38,8 @@
 				{
 					"id": -1,
 					"name": "mark",
-					"pathName": "pages/mark/mark"
+					"pathName": "pages/mark/mark",
+					"query": ""
 				}
 			]
 		}

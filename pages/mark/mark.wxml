@@ -4,6 +4,7 @@
   <block wx:if="{{hasAuthLocation}}">
     <view
       class="info_panel"
+      scroll-y="{{true}}"
       animation="{{panelAniData}}"
     >
       <!-- 关闭面板的叉叉 -->
@@ -20,13 +21,14 @@
         />
       </view>
 
+      <!-- 内容 -->
       <view class="content_wrap">
         <view class="title">
-          <input value="国贸"/>
+          <text>国贸</text>
         </view>
 
         <view class="address">
-          <input value="福利费简单了解"/>
+          <text>范德萨发放</text>
         </view>
 
         <view class="add_time">
@@ -39,28 +41,39 @@
         >
           <view class="desc">
             <text class="time">5月15日</text>
-            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+            <input value="到了附近的登录方法"/>
           </view>
           <view class="desc">
             <text class="time">5月15日</text>
-            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+            <input value="到了附近的登录方法"/>
           </view>
           <view class="desc">
             <text class="time">5月15日</text>
-            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+            <input value="到了附近的登录方法"/>
           </view>
           <view class="desc">
             <text class="time">5月15日</text>
-            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+            <input value="到了附近的登录方法"/>
           </view>
           <view class="desc">
             <text class="time">5月15日</text>
-            <input value="吃饭, 逛街, 看电影, 看了中国尊."/>
+            <input value="到了附近的登录方法"/>
           </view>
         </scroll-view>
+      </view>
 
-
-
+      <!-- 添加事件面板 -->
+      <view class="incident_panel">
+        <picker mode="date"  start="2015-09-01" end="2017-09-01" >
+          <view class="field">
+            <text class="field_name">时间:</text>
+            <text>5月15日</text>
+          </view>
+       </picker>
+       <view class="field">
+          <text class="field_name">片语:</text>
+          <input value="对对对"/>
+       </view>
       </view>
 
     </view>

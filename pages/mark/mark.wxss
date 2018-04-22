@@ -75,6 +75,7 @@
   padding-top: 40rpx;
 }
 .info_panel .title{
+  font-size: 14pt;
   color: #353535;
 }
 .info_panel .address{
@@ -83,22 +84,51 @@
 }
 .info_panel .add_time{
   display: inline-block;
-  margin: 10rpx 0;
-  padding: 5rpx 10rpx;
+  margin: 30rpx 0;
+  padding: 8rpx 18rpx;
   color: #E6804E;
-  font-size: 7pt;
+  font-size: 9pt;
   border-radius: 20rpx;
   border: 1px solid #E6804E;
 }
 .info_panel .incident_list{
-  overflow: hidden;
+  margin-top: 20rpx;
+  height: 376rpx;
+
 }
 .info_panel .desc{
-  margin-top: 28rpx;
-  color: #7A7A7A;
+  margin-bottom: 22rpx;
+  color: #717475;
   font-size: 11pt;
 }
 .info_panel .desc .time{
-  color: #EB5252;
+  color: #F46666;
   font-size: 9pt;
+}
+.info_panel .incident_panel{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  padding: 20rpx;
+  box-shadow: 0 0 10rpx 5rpx rgba(0, 0, 0, 0.22);
+  background-color: #fff;
+  border-radius: 10rpx;
+
+}
+.info_panel .incident_panel .field{
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 14pt;
+  display: flex;
+  vertical-align: middle;
+}
+.info_panel .incident_panel .field_name{
+  width: 110rpx;
+  color: #A4A6A3;
+}
+.info_panel .incident_panel .field input{
+  height: 80rpx;
+  line-height: 80rpx;
 }
