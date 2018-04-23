@@ -48,9 +48,9 @@
              class="desc"
              wx:for="{{incidents}}"
              wx:key="id"
-             bind:tap="onEditIncident"
-             data-id="{{item.id}}"
-           >
+             id="{{item.id}}"
+             catch:tap="onEditIncident"
+          >
             <text class="time">{{tool.toIncidentTime(item.time)}}</text>
             <view>{{item.content}}</view>
 
@@ -68,6 +68,7 @@
           mode="date"
           start="2000-1-1"
           end="2020-09-01"
+          value="{{incidentTime}}"
           bind:change="onSelectTime"
         >
           <view class="field">
@@ -81,6 +82,7 @@
             class="input_area"
             data-name="incident_desc"
             bindinput="onIncidentDescInput"
+            value="{{incidentDesc}}"
           />
        </view>
        <view class="buttons">
@@ -125,8 +127,6 @@
 
       </map>
     </view>
-
-
 
   </block>
   <block wx:if="{{!hasAuthLocation}}">

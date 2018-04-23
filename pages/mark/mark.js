@@ -3,6 +3,12 @@ const api = require('../../helper/api');
 const util = require('../../utils/util');
 
 Page({
+  // 所有的输入框的值
+  input: {},
+  // 事件修改框弹出时,
+  // 如果此有id值, 说明是修改某个事件
+  // 是 null 则会
+  whichToFix: null,
   data: {
     hasAuthLocation: true,
     showLocate: {},
@@ -16,8 +22,10 @@ Page({
     isShowIncidentPanel: false,
     // 临时使用的事件数据, 以后从后端获取
     incidents:[],
-    // 事件的事件
+    // 编辑事件的时间
     incidentTime: 0,
+    // 编辑时间的描述
+    incidentDesc: ''
   },
   onLoad(){
 
@@ -145,28 +153,44 @@ Page({
   onHideIncidentPanel(){
     this.setData({
       isShowIncidentPanel: false
-    })
+    });
+    this.whichToFix = null;
   },
   // 保存一个事件
   onSaveIincident(){
     let {
       incidentTime,
-      incidents
+      incidents,
     } = this.data;
 
     let {incident_desc} = this.input;
 
-    this.setData({
-      isShowIncidentPanel: false,
-      incidents: [
-        {
-          id: Math.random(),
-          time: incidentTime,
-          content: incident_desc
-        },
-        ...incidents
-      ]
-    })
+    if(!this.whichToFix){
+      this.setData({
+        isShowIncidentPanel: false,
+        incidents: [
+          {
+            id: Math.random().toString(),
+            time: incidentTime,
+            content: incident_desc
+          },
+          ...incidents
+        ]
+      });
+    }else{
+      this.setData({
+        isShowIncidentPanel: false,
+        incidents: incidents.map(elt=>{
+          if(elt.id===this.whichToFix) {
+            elt.time = incidentTime;
+            elt.content = incident_desc;
+          };
+          return elt;
+        })
+      })
+    }
+    // 重置编辑框的修改与保存状态
+    this.whichToFix = null;
 
   },
   // 事件编辑描述输入
@@ -183,11 +207,15 @@ Page({
   },
   // 编辑事件
   onEditIncident(e){
-    let {id} = e.target.dataset;
+
+    let {id} = e.currentTarget;
+    this.whichToFix = id;
     let incident = this.data.incidents.filter(elt=>elt.id===id)[0];
 
     this.setData({
       isShowIncidentPanel: true,
+      incidentTime: incident.time,
+      incidentDesc: incident.content
     });
   }
 });

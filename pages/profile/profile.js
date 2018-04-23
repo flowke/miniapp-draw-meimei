@@ -6,7 +6,6 @@ let p = 'https://pic.qqtn.com/up/2017-12/15138357828139708.jpg';
 const app = getApp();
 
 Page({
-
   data: {
     hasAuthUserInfo: true,
     userInfo: {},
