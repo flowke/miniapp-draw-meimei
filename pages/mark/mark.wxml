@@ -31,48 +31,68 @@
           <text>范德萨发放</text>
         </view>
 
-        <view class="add_time">
+        <view
+          class="add_time"
+          bind:tap="onShowIncidentPanel"
+        >
           添加事件
         </view>
 
+        <!-- 事件列表 -->
         <scroll-view
           class="incident_list"
           scroll-y="{{true}}"
         >
-          <view class="desc">
-            <text class="time">5月15日</text>
-            <input value="到了附近的登录方法"/>
+
+          <view
+             class="desc"
+             wx:for="{{incidents}}"
+             wx:key="id"
+             bind:tap="onEditIncident"
+             data-id="{{item.id}}"
+           >
+            <text class="time">{{tool.toIncidentTime(item.time)}}</text>
+            <view>{{item.content}}</view>
+
           </view>
-          <view class="desc">
-            <text class="time">5月15日</text>
-            <input value="到了附近的登录方法"/>
-          </view>
-          <view class="desc">
-            <text class="time">5月15日</text>
-            <input value="到了附近的登录方法"/>
-          </view>
-          <view class="desc">
-            <text class="time">5月15日</text>
-            <input value="到了附近的登录方法"/>
-          </view>
-          <view class="desc">
-            <text class="time">5月15日</text>
-            <input value="到了附近的登录方法"/>
-          </view>
+
         </scroll-view>
       </view>
 
-      <!-- 添加事件面板 -->
-      <view class="incident_panel">
-        <picker mode="date"  start="2015-09-01" end="2017-09-01" >
+      <!-- 编辑事件面板 -->
+      <view
+        class="incident_panel"
+        wx:if="{{isShowIncidentPanel}}"
+      >
+        <picker
+          mode="date"
+          start="2000-1-1"
+          end="2020-09-01"
+          bind:change="onSelectTime"
+        >
           <view class="field">
             <text class="field_name">时间:</text>
-            <text>5月15日</text>
+            <text class="input_area">{{tool.toIncidentTime(incidentTime)}}</text>
           </view>
        </picker>
        <view class="field">
           <text class="field_name">片语:</text>
-          <input value="对对对"/>
+          <input
+            class="input_area"
+            data-name="incident_desc"
+            bindinput="onIncidentDescInput"
+          />
+       </view>
+       <view class="buttons">
+         <button
+           size="mini"
+           catch:tap="onHideIncidentPanel"
+         >取消</button>
+         <button
+           size="mini"
+           type="primary"
+           catch:tap="onSaveIincident"
+         > 确认</button>
        </view>
       </view>
 

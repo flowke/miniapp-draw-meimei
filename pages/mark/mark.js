@@ -1,6 +1,6 @@
 const auth = require('../../api/auth');
 const api = require('../../helper/api');
-
+const util = require('../../utils/util');
 
 Page({
   data: {
@@ -11,7 +11,13 @@ Page({
     markerData:[],
     includePoints: {points:[]},
     markInfo: null,
-    panelAniData: {}
+    panelAniData: {},
+    // 是否显示添加事件面板
+    isShowIncidentPanel: false,
+    // 临时使用的事件数据, 以后从后端获取
+    incidents:[],
+    // 事件的事件
+    incidentTime: 0,
   },
   onLoad(){
 
@@ -125,6 +131,63 @@ Page({
       markInfo: null,
       panelAniData: ani.export()
     });
-  }
+  },
 
+  // 打开添加事件面板
+  onShowIncidentPanel(){
+    console.log(999);
+    this.setData({
+      isShowIncidentPanel: true,
+      incidentTime:  util.DateTo(new Date())
+    });
+  },
+  // 关闭添加事件面板
+  onHideIncidentPanel(){
+    this.setData({
+      isShowIncidentPanel: false
+    })
+  },
+  // 保存一个事件
+  onSaveIincident(){
+    let {
+      incidentTime,
+      incidents
+    } = this.data;
+
+    let {incident_desc} = this.input;
+
+    this.setData({
+      isShowIncidentPanel: false,
+      incidents: [
+        {
+          id: Math.random(),
+          time: incidentTime,
+          content: incident_desc
+        },
+        ...incidents
+      ]
+    })
+
+  },
+  // 事件编辑描述输入
+  onIncidentDescInput(e){
+    let {name} = e.target.dataset;
+    this.input[name] = e.detail.value;
+  },
+  // 时间选择
+  onSelectTime(ev){
+
+    this.setData({
+      incidentTime: ev.detail.value
+    });
+  },
+  // 编辑事件
+  onEditIncident(e){
+    let {id} = e.target.dataset;
+    let incident = this.data.incidents.filter(elt=>elt.id===id)[0];
+
+    this.setData({
+      isShowIncidentPanel: true,
+    });
+  }
 });

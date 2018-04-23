@@ -118,6 +118,7 @@
 
 }
 .info_panel .incident_panel .field{
+  display: flex;
   height: 80rpx;
   line-height: 80rpx;
   font-size: 14pt;
@@ -131,4 +132,16 @@
 .info_panel .incident_panel .field input{
   height: 80rpx;
   line-height: 80rpx;
+}
+.info_panel .incident_panel .input_area{
+  flex: 1;
+  border-bottom: 1rpx solid #9CA2A3;
+}
+.info_panel .incident_panel .buttons{
+  display: flex;
+  margin-top: 20rpx;
+}
+.info_panel .incident_panel .buttons button{
+  flex: 1;
+  margin: 0 20rpx;
 }
