@@ -14,7 +14,15 @@
       <text class="title color_semi">{{userInfo.nickName}}</text>
       <text class="desc color_light">{{userInfo.country}}</text>
 
-      <view class="done_tags_box">
+      <view
+        class="goals"
+        catch:tap="onGotoMark"
+      >
+        <view class="achievement"></view>
+        <view class="want_to"></view>
+      </view>
+
+      <!-- <view class="done_tags_box">
 
         <view
           class="tag color_semi"
@@ -26,21 +34,41 @@
           {{item.name}}
         </view>
 
-      </view>
+      </view> -->
+
     </view>
 
-    <!-- <map name=""></map> -->
+    <view class="place_list">
+      <view class="place_list_header"></view>
+      <view class="place_item title">
+        <view class="time">时间</view>
+        <view class="place">地点</view>
+      </view>
+      <view class="place_item">
+        <view class="time">2018年5月15日</view>
+        <view class="place">
+          国贸
+          <view class="spot">+ 8</view>
+        </view>
+      </view>
+      <view class="place_item">
+        <view class="time">2018年5月15日</view>
+        <view class="place">国贸</view>
+      </view>
+    </view>
 
     <!-- 添加按钮 -->
     <view
       class="add_button"
-      bind:tap="showAddModel"
+      catch:tap="onAddMark"
     >
       <!-- <navigator
         hover-class="none"
         url="/pages/mark/mark"
       >+</navigator> -->
     </view>
+
+
   </block>
 
   <!-- 如果用户没有授权 -->
@@ -64,7 +92,7 @@
         cursor-spacing="100"
         bindinput="inputval"
         bindconfirm="addSymbol"
-        />
+      />
       <view class="buttons_wrap">
         <button
           size="mini"

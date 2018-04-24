@@ -1,5 +1,8 @@
 .container{
-  height: 100%;
+  min-height: 100%;
+  background-color: #F2F9FE;
+  padding: 20rpx 0;
+
   /* background-color: red */
 }
 
@@ -7,7 +10,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin: 30rpx;
+  margin-top: 0;
+  background-color: #fff;
+  box-shadow: 0 0 9rpx 3rpx rgba(0, 0, 0, 0.14);
+  border-radius: 10rpx;
+  overflow: hidden;
 }
 
 .profile_card_box .avatar_wrap{
@@ -33,6 +41,59 @@
 }
 .profile_card_box .desc{
   font-size: 10pt;
+}
+
+.profile_card_box .goals{
+  margin-top: 30rpx;
+  height: 140rpx;
+  width: 100%;
+  background-color: #5CA8FA;
+
+}
+
+/* 地点列表 */
+.place_list{
+  margin: 30rpx;
+  padding: 30rpx;
+  height: 500rpx;
+  background-color: #fff;
+  box-shadow: 0 0 9rpx 3rpx rgba(0, 0, 0, 0.14);
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+.place_list .place_item{
+  display: flex;
+  font-size: 12pt;
+  line-height: 80rpx;
+  height: 80rpx;
+  color: #888888;
+  border-bottom: 1rpx solid #F1F1F1;
+}
+.place_list .place_item.title{
+  border-bottom: none;
+  color: #353535;
+  font-size: 14pt;
+  font-weight: bold;
+  /* background-color: red; */
+}
+.place_list .place_item .time{
+  flex: 2;
+}
+.place_list .place_item .place{
+  flex: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.place_list .place .spot{
+  color: #fff;
+  line-height: 1em;
+  margin-right: 60rpx;
+  background-color: #E65B5B;
+  padding: 12rpx;
+  border-radius: 50%;
+  font-size: 10pt;
+  box-shadow: 2rpx 4rpx 5rpx 3rpx rgba(254, 24, 24, 0.20);
 }
 
 /* symbol 的标签盒子 */

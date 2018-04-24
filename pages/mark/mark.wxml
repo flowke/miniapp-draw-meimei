@@ -4,7 +4,6 @@
   <block wx:if="{{hasAuthLocation}}">
     <view
       class="info_panel"
-      scroll-y="{{true}}"
       animation="{{panelAniData}}"
     >
       <!-- 关闭面板的叉叉 -->

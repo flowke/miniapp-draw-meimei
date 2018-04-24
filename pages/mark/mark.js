@@ -5,6 +5,7 @@ const util = require('../../utils/util');
 Page({
   // 所有的输入框的值
   input: {},
+  query: {},
   // 事件修改框弹出时,
   // 如果此有id值, 说明是修改某个事件
   // 是 null 则会
@@ -27,7 +28,8 @@ Page({
     // 编辑时间的描述
     incidentDesc: ''
   },
-  onLoad(){
+  onLoad(query){
+    this.query = query;
 
   },
 
@@ -38,6 +40,14 @@ Page({
       duration: 0,
       timingFunction: 'ease-out',
     });
+
+    let {method} = this.query;
+
+    if(method==='add'){
+      this.toMyLocation();
+      this._openDetail();
+    }
+
   },
 
   onShow(){
@@ -67,8 +77,6 @@ Page({
         this.setData({
           hasAuthLocation: false
         });
-
-
         console.log('没有地址授权');
 
       });
@@ -118,16 +126,20 @@ Page({
       });
   },
 
-  // 点击 marker
-  tapmarker({markerId}){
-
-    // let marker = this.data.markerData.filter(e=>e.id===markerId)[0];
-
+  _openDetail(){
     let ani = this.panelAni.height('70%').step();
     this.setData({
       // markInfo: marker,
       panelAniData: ani.export()
     });
+  },
+
+  // 点击 marker
+  tapmarker({markerId}){
+
+    // let marker = this.data.markerData.filter(e=>e.id===markerId)[0];
+
+    this.openDetail();
   },
 
   // 关闭 marker 详情面板
@@ -143,7 +155,7 @@ Page({
 
   // 打开添加事件面板
   onShowIncidentPanel(){
-    console.log(999);
+
     this.setData({
       isShowIncidentPanel: true,
       incidentTime:  util.DateTo(new Date())
@@ -191,7 +203,6 @@ Page({
     }
     // 重置编辑框的修改与保存状态
     this.whichToFix = null;
-
   },
   // 事件编辑描述输入
   onIncidentDescInput(e){

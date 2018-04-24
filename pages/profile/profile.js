@@ -53,9 +53,7 @@ Page({
             // 获取用户信息失败
             console.log(e);
           });
-
         }
-
       })
       .catch(()=>{
         // 授权失败
@@ -66,10 +64,16 @@ Page({
   },
 
   // 跳转到符号标记的地图页
-  gotoMark({target}){
-    let {id} = target.dataset;
+  onGotoMark(e){
+    let {id} = e.currentTarget.dataset;
     api.navigateTo({
       url: `/pages/mark/mark?id=${id}`
+    });
+  },
+
+  onAddMark(){
+    api.navigateTo({
+      url: `/pages/mark/mark?method=add`
     });
   },
 
