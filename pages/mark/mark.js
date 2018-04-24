@@ -1,6 +1,8 @@
 const auth = require('../../api/auth');
 const api = require('../../helper/api');
 const util = require('../../utils/util');
+const qqmapAPI =api.createQQMap('R4EBZ-JG43O-M67WY-SAGOA-ABUKV-IYFN7');
+
 
 Page({
   // 所有的输入框的值
@@ -31,6 +33,7 @@ Page({
   onLoad(query){
     this.query = query;
 
+
   },
 
   onReady(){
@@ -46,6 +49,18 @@ Page({
     if(method==='add'){
       this.toMyLocation();
       this._openDetail();
+      api.getLocation({type: 'gcj02'})
+        .then(res=>{
+          return qqmapAPI.reverseGeocoder({
+            location: {
+              latitude: res.latitude,
+              longitude: res.longitude
+            }
+          });
+        })
+        .then(res=>{
+          console.log(res);
+        })
     }
 
   },

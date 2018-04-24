@@ -1,4 +1,6 @@
 
+const QQMapWX = require('../lib/qqmap-wx-jssdk.min');
+
 let bindAPI = (apiName, bindObj=wx)=>(o={})=>new Promise((resolve, reject)=>{
 
   bindObj[apiName](Object.assign({}, o, {
@@ -90,7 +92,10 @@ let apiSpace = {
 
     // 设置
     'getSetting',
-    'openSetting'
+    'openSetting',
+
+    // qq地图
+
   ]
 }
 
@@ -100,13 +105,37 @@ for(let k in apiSpace){
   rawNameArr = [...rawNameArr, ...apiSpace[k]]
 }
 
-module.exports = rawNameArr.reduce( (accu,elt)=>{
+const apis = rawNameArr.reduce( (accu,elt)=>{
 
   if(Object.prototype.toString.call(elt)==='[object String]'){
     accu[elt] = bindAPI(elt)
   }else{
+    // elt.names.forEach(name=>{
+    //   accu[name] = bindAPI(elt.name, elt.thisArg)
+    // })
     accu[elt.name] = bindAPI(elt.name, elt.thisArg)
   }
 
   return accu;
 }, {});
+
+// qqwx 地图 api
+apis.createQQMap =(key)=>{
+
+  let ins = new QQMapWX({key});
+
+  return [
+    'search',
+    'getSuggestion',
+    'reverseGeocoder',
+    'geocoder',
+    'getCityList',
+    'getDistrictByCityId',
+    'calculateDistance'
+  ].reduce((accu, name)=>{
+    accu[name] = bindAPI(name, ins);
+    return accu;
+  },{});
+};
+
+module.exports = apis;
