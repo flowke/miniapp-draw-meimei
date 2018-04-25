@@ -3,6 +3,6 @@
 <view class="auth_wrap">
   <button
     type= "primary"
-    bind:tap="openSetting"
+    catch:tap="onAuth"
   >请授权使用</button>
 </view>

@@ -68,13 +68,12 @@
       >+</navigator> -->
     </view>
 
-
   </block>
 
   <!-- 如果用户没有授权 -->
   <block wx:if="{{hasAuthUserInfo===false}}">
     <auth-page
-      bind:getAuth="getAuth"
+      bind:getAuth="onGetAuth"
       scope="userInfo"
     />
   </block>

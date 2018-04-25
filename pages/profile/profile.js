@@ -82,11 +82,14 @@ Page({
   // event 的 detail 参数为 bool
   // true 代表取得了授权
   // false 代表没取得授权
-  getAuth(event){
+  onGetAuth(event){
     let {detail} = event;
-    this.setData({
-      hasAuthUserInfo: false
-    })
+    if(!detail){
+      this.setData({
+        hasAuthUserInfo: false
+      });
+    }
+
   },
 
   // 添加一个要标记的符号
@@ -135,18 +138,7 @@ Page({
 
   //
   getLocation(ev){
-    wx.login({
-      success: ret=>{
-        wx.request({
-          url: 'http://localhost:3000/user/login',
-          data: {code: ret.code},
-          method: 'POST',
-          success: (ret)=>{
-            console.log(ret.data);
-          }
-        })
-      }
-    })
+
   }
 
 })

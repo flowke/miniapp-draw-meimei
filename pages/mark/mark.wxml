@@ -2,6 +2,7 @@
 
 <view class="container">
   <block wx:if="{{hasAuthLocation}}">
+    <!-- mark 详情信息面板 -->
     <view
       class="info_panel"
       animation="{{panelAniData}}"
@@ -22,12 +23,18 @@
 
       <!-- 内容 -->
       <view class="content_wrap">
-        <view class="title">
-          <text>国贸</text>
+        <view
+          class="title"
+            catch:tap="onChangeTitle"
+          >
+          <text>{{markTitle}}</text>
         </view>
 
-        <view class="address">
-          <text>范德萨发放</text>
+        <view
+          class="address"
+          catch:tap="onChooseLocation"
+        >
+          <text>{{markAddress}}</text>
         </view>
 
         <view
@@ -38,9 +45,8 @@
         </view>
 
         <!-- 事件列表 -->
-        <scroll-view
+        <view
           class="incident_list"
-          scroll-y="{{true}}"
         >
 
           <view
@@ -55,7 +61,7 @@
 
           </view>
 
-        </scroll-view>
+        </view>
       </view>
 
       <!-- 编辑事件面板 -->
@@ -98,6 +104,10 @@
       </view>
 
     </view>
+    <!-- 保存按钮 -->
+    <view class="save">
+      <button type="primary" size="mini">保存</button>
+    </view>
     <view style="height:100%">
       <map
         id="map"
@@ -106,7 +116,6 @@
         bindmarkertap="tapmarker"
         markers="{{tool.createMarkers(markerData)}}"
         bindtap="tapmarker"
-
       >
         <!-- 回到当前定位 -->
         <cover-view

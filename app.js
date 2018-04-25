@@ -9,9 +9,18 @@ App({
     userInfo: null
   },
 
-  onShow(){
-
-
+  onLaunch(){
+    api.login()
+    .then(ret=>{
+      return api.request({
+        url: 'http://localhost:3000/user/login',
+        data: {code: ret.code},
+        method: 'POST'
+      });
+    })
+    .then(res=>{
+      console.log(res);
+    })
   },
 
   updateGlobalUserInfo(userInfo){

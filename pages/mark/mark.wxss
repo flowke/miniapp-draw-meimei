@@ -47,6 +47,7 @@
   position: relative;
   width: 100%;
   height: 0;
+  overflow: auto;
 }
 .info_panel .cancel_cross{
   position: absolute;
@@ -93,7 +94,6 @@
 }
 .info_panel .incident_list{
   margin-top: 20rpx;
-  height: 376rpx;
 
 }
 .info_panel .desc{
@@ -144,4 +144,20 @@
 .info_panel .incident_panel .buttons button{
   flex: 1;
   margin: 0 20rpx;
+}
+
+/* 添加新 mark 时, 出现的保存按钮 */
+.save{
+  padding: 0 30rpx;
+  height: 100rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+.save{
+  width: 100%;
+  flex: 1;
+
 }

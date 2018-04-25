@@ -20,6 +20,11 @@ Page({
     markerData:[],
     includePoints: {points:[]},
     markInfo: null,
+    // 详情面板中标题,如: 国贸
+    markTitle: '',
+    // 详情面板中地址
+    markAddress: '',
+    // 详情面板弹出动画数据
     panelAniData: {},
     // 是否显示添加事件面板
     isShowIncidentPanel: false,
@@ -51,16 +56,12 @@ Page({
       this._openDetail();
       api.getLocation({type: 'gcj02'})
         .then(res=>{
-          return qqmapAPI.reverseGeocoder({
-            location: {
-              latitude: res.latitude,
-              longitude: res.longitude
-            }
+
+          this._chooseQQMapLocation({
+            latitude: res.latitude,
+            longitude: res.longitude
           });
-        })
-        .then(res=>{
-          console.log(res);
-        })
+        });
     }
 
   },
@@ -154,7 +155,46 @@ Page({
 
     // let marker = this.data.markerData.filter(e=>e.id===markerId)[0];
 
-    this.openDetail();
+    this._openDetail();
+  },
+  // 改变 mark 详情 title
+  onChangeTitle(){
+
+  },
+  // 改变 mark 详情 地址
+  onChooseLocation(){
+
+    api.chooseLocation()
+      .then(res=>{
+        console.log(res, 'on');
+        this._chooseQQMapLocation({
+          latitude: res.latitude,
+          longitude: res.longitude
+        })
+      });
+
+  },
+
+  _chooseQQMapLocation(location){
+    return qqmapAPI.reverseGeocoder({location})
+      .then(({result})=>{
+        console.log(result);
+        let {address_reference, formatted_addresses} = result;
+          let title = '';
+
+          if(address_reference.famous_area){
+            title = address_reference.famous_area.title;
+          }else if(address_reference.landmark_l1){
+            title = address_reference.landmark_l1.title;
+          }else if(address_reference.landmark_l2){
+            title = address_reference.landmark_l2.title;
+          }
+
+          this.setData({
+            markTitle: title,
+            markAddress: formatted_addresses.recommend,
+          });
+      })
   },
 
   // 关闭 marker 详情面板

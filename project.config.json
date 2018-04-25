@@ -36,10 +36,10 @@
 			"current": -1,
 			"list": [
 				{
-					"id": -1,
+					"id": 0,
 					"name": "mark",
 					"pathName": "pages/mark/mark",
-					"query": ""
+					"query": "method=add"
 				}
 			]
 		}
