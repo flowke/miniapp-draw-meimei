@@ -3,7 +3,6 @@ require('./lib/regenerator-runtime')
 const auth = require('./api/auth');
 const api = require('./helper/api');
 
-
 App({
   globalData: {
     userInfo: null
@@ -19,7 +18,11 @@ App({
       });
     })
     .then(res=>{
-      console.log(res);
+      let {data} = res.data
+      api.setStorage({
+        key: 'userID',
+        data: data._id
+      })
     })
   },
 

@@ -16,7 +16,7 @@
 
       <view class="header_img">
         <image
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScgASmjdAgex5npjjcNA-4psF3fxQD7wZATFFqK_cJt5uhss87"
+          src="https://images.unsplash.com/photo-1507082529-e5ebd28d8ea1?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=f5850d6d4cc2a6e1f61a4aa1c8171187&auto=format&fit=crop&w=2767&q=80"
           class=""
         />
       </view>
@@ -106,8 +106,13 @@
     </view>
     <!-- 保存按钮 -->
     <view class="save">
-      <button type="primary" size="mini">保存</button>
+      <button
+        type="primary"
+        size="mini"
+        catch:tap="onSaveMark"
+      >保存</button>
     </view>
+
     <view style="height:100%">
       <map
         id="map"

@@ -31,15 +31,10 @@ let apiSpace = {
   // 数据缓存
   dataCache:[
     'setStorage',
-    'setStorageSync',
     'getStorage',
-    'getStorageSync',
     'getStorageInfo',
-    'getStorageInfoSync',
     'removeStorage',
-    'removeStorageSync',
     'clearStorage',
-    'clearStorageSync',
   ],
 
   // location

@@ -1,5 +1,6 @@
 const auth = require('../../api/auth');
 const api = require('../../helper/api');
+const req = require('../../api/req');
 const util = require('../../utils/util');
 const qqmapAPI =api.createQQMap('R4EBZ-JG43O-M67WY-SAGOA-ABUKV-IYFN7');
 
@@ -206,6 +207,29 @@ Page({
       markInfo: null,
       panelAniData: ani.export()
     });
+  },
+
+  // 保存一个新添加的标记点
+  onSaveMark(){
+
+    let {
+      markTitle,
+      markAddress,
+      incidents
+    } = this.data;
+
+    let userID = wx.getStorageSync('userID');
+    
+    req.addMark({
+      markTitle,
+      markAddress,
+      incidents,
+      userID
+    })
+    .then(res=>{
+      console.log(res);
+    })
+
   },
 
   // 打开添加事件面板
