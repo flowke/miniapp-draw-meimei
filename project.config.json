@@ -5,13 +5,13 @@
 	},
 	"setting": {
 		"urlCheck": false,
-		"es6": false,
+		"es6": true,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.9.98",
+	"libVersion": "1.9.9",
 	"appid": "wx0a6982103c1d0067",
 	"projectname": "miniapp-draw-meimei",
 	"isGameTourist": false,

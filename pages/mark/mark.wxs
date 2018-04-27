@@ -13,17 +13,17 @@ module.exports.createPolyline = function (data) {
 
 
 module.exports.createMarkers = function (data) {
-
+  console.log(data);
   return data.map(function(elt){
     return {
-      id: elt.id,
+      id: elt._id,
       latitude: elt.latitude,
       longitude: elt.longitude,
       iconPath: './img/melonPin.png',
       width: 30,
       height: 30,
       callout: {
-        content: elt.name,
+        content: elt.title,
         display: 'BYCLICK',
         borderRadius: 6,
         padding: 10,

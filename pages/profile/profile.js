@@ -1,5 +1,6 @@
 const auth = require('../../api/auth');
 const api = require('../../helper/api');
+const req = require('../../api/req');
 
 let p = 'https://pic.qqtn.com/up/2017-12/15138357828139708.jpg';
 
@@ -11,22 +12,17 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     isShowAddingModel: false,
-    symbols: [],
+    markers: [],
   },
 
   onLoad(){
-    api.getStorage({key: 'symbols'})
-      .then(({data})=>{
-        this.setData({
-          symbols: data
-        })
-      })
-      .catch(e=>e);
+
   },
 
   // 页面显示时候
   onShow(){
 
+    // start  auth
     auth('userInfo')
       .then(ret=>{
         // 授权成功
@@ -61,16 +57,20 @@ Page({
           hasAuthUserInfo: false
         });
       });
+
+    // end auth
+
   },
 
   // 跳转到符号标记的地图页
   onGotoMark(e){
     let {id} = e.currentTarget.dataset;
     api.navigateTo({
-      url: `/pages/mark/mark?id=${id}`
+      url: `/pages/mark/mark?id=${id}&method=check`
     });
   },
 
+  // 添加一个地点标记
   onAddMark(){
     api.navigateTo({
       url: `/pages/mark/mark?method=add`
@@ -91,28 +91,6 @@ Page({
     }
 
   },
-
-  // 添加一个要标记的符号
-  addSymbol(){
-    let {symbols, inputSymbolName} = this.data;
-
-    this.setData({
-      isShowAddingModel: false,
-      symbols: [
-        {
-          id: Math.random(),
-          name: inputSymbolName
-        },
-        ...symbols
-      ]
-    },()=>{
-      api.setStorage({
-        key: 'symbols',
-        data: this.data.symbols
-      })
-    });
-  },
-
   // 显示添加 symbol 的 model
   showAddModel(){
 

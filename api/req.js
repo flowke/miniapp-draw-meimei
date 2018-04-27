@@ -18,3 +18,6 @@ let post = (url, data)=>{
 
 // 请求保存 mark
 exports.addMark = (data)=>post('/mark/add', data);
+
+// 请求获取 mark
+exports.getMarkers = (data)=>post('/mark/get', data);

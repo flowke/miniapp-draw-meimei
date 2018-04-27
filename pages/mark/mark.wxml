@@ -8,7 +8,7 @@
       animation="{{panelAniData}}"
     >
       <!-- 关闭面板的叉叉 -->
-      <view class="cancel_cross" bind:tap="closePanel">
+      <view class="cancel_cross" bind:tap="onClosePanel">
         <image
           src="./img/cross.png"
         />
@@ -25,16 +25,16 @@
       <view class="content_wrap">
         <view
           class="title"
-            catch:tap="onChangeTitle"
+            catch:tap="onChooseLocation"
           >
-          <text>{{markTitle}}</text>
+          <text>{{detailPanelInfo.title}}</text>
         </view>
 
         <view
           class="address"
           catch:tap="onChooseLocation"
         >
-          <text>{{markAddress}}</text>
+          <text>{{detailPanelInfo.address}}</text>
         </view>
 
         <view
@@ -51,7 +51,7 @@
 
           <view
              class="desc"
-             wx:for="{{incidents}}"
+             wx:for="{{detailPanelInfo.incidents}}"
              wx:key="id"
              id="{{item.id}}"
              catch:tap="onEditIncident"
@@ -67,18 +67,18 @@
       <!-- 编辑事件面板 -->
       <view
         class="incident_panel"
-        wx:if="{{isShowIncidentPanel}}"
+        wx:if="{{detailPanelInfo.isShowIncidentPanel}}"
       >
         <picker
           mode="date"
           start="2000-1-1"
           end="2020-09-01"
-          value="{{incidentTime}}"
+          value="{{detailPanelInfo.incidentTime}}"
           bind:change="onSelectTime"
         >
           <view class="field">
             <text class="field_name">时间:</text>
-            <text class="input_area">{{tool.toIncidentTime(incidentTime)}}</text>
+            <text class="input_area">{{tool.toIncidentTime(detailPanelInfo.incidentTime)}}</text>
           </view>
        </picker>
        <view class="field">
@@ -87,7 +87,7 @@
             class="input_area"
             data-name="incident_desc"
             bindinput="onIncidentDescInput"
-            value="{{incidentDesc}}"
+            value="{{detailPanelInfo.incidentDesc}}"
           />
        </view>
        <view class="buttons">
