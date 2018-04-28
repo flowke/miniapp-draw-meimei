@@ -1,3 +1,4 @@
+<wxs src="../common/util.wxs" module="tool"></wxs>
 <view class="container">
 
   <!-- 用用户信息授权 -->
@@ -44,17 +45,19 @@
         <view class="time">时间</view>
         <view class="place">地点</view>
       </view>
-      <view class="place_item">
-        <view class="time">2018年5月15日</view>
+      <view
+        class="place_item"
+        wx:for="{{markers}}"
+        wx:key="id"
+        id="{{item.id}}"
+      >
+        <view class="time">{{item.lastTime}}</view>
         <view class="place">
-          国贸
-          <view class="spot">+ 8</view>
+          {{item.title}}
+          <view class="spot">+ {{item.times}}</view>
         </view>
       </view>
-      <view class="place_item">
-        <view class="time">2018年5月15日</view>
-        <view class="place">国贸</view>
-      </view>
+
     </view>
 
     <!-- 添加按钮 -->
@@ -78,7 +81,7 @@
     />
   </block>
 
-  <!-- 添加 symbol 的 model -->
+  <!-- 添加 marker 的 model -->
 
   <view class="model_mask" wx:if="{{isShowAddingModel}}">
     <view class="model">

@@ -21,6 +21,9 @@ Page({
     polyline: [],
     markerData:[],
     includePoints: {points:[]},
+
+    // 新添加一个 marker 时, 会显示保存按钮
+    isShowSaveButton: false,
     // 详情面板中标题,如: 国贸
     detailPanelInfo: {
       latitude: null,
@@ -32,7 +35,7 @@ Page({
       incidentTime: 0, // 编辑事件的时间
       incidentDesc: '', // 编辑时间的描述
     },
-
+    // 信息面板的弹出收起动画数据
     panelAniData: {},
   },
   onLoad(query){
@@ -53,19 +56,33 @@ Page({
     if(method==='add'){
       this.toMyLocation();
       this._openDetail();
-      api.getLocation({type: 'gcj02'})
-        .then(res=>{
 
-          this._chooseQQMapLocation({
-            latitude: res.latitude,
-            longitude: res.longitude
-          });
+      api.getLocation({type: 'gcj02'})
+      .then(res=>{
+        this._chooseQQMapLocation({
+          latitude: res.latitude,
+          longitude: res.longitude
         });
+      });
+
+      this.setData({
+        isShowSaveButton: true
+      });
     }
 
   },
 
   onShow(){
+
+    // 渲染 markers
+
+    let markers = wx.getStorageSync('markers');
+
+    if(markers){
+      this.setData({
+        markerData: markers
+      })
+    }
 
     auth('userLocation')
       .then(ret=>{
@@ -78,7 +95,6 @@ Page({
                 latitude, longitude
               }
             });
-
           })
           .catch(e=>{
             console.log(e);
@@ -152,9 +168,9 @@ Page({
   // 收起 mark 信息面板
   _closeDetail(){
     let ani = this.panelAni.height(0).step();
-
     this.setData({
-      panelAniData: ani.export()
+      panelAniData: ani.export(),
+      isShowSaveButton: false
     });
   },
 

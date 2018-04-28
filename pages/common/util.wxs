@@ -13,7 +13,7 @@ module.exports.createPolyline = function (data) {
 
 
 module.exports.createMarkers = function (data) {
-
+  console.log(data);
   return data.map(function(elt){
     return {
       id: elt._id,

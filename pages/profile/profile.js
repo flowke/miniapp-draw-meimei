@@ -16,16 +16,26 @@ Page({
   },
 
   onLoad(){
-    let userID = wx.getStorageSync('userID');
 
-    req.getMarkers({userID})
-    .then((res)=>{
-      console.log(res);
-    })
+
+
   },
 
   // 页面显示时候
   onShow(){
+
+    let sid = wx.getStorageSync('sess-cookie');
+
+    if(!sid){
+      req.login()
+      .then(id=>{
+        // 同步 marker 信息
+        this._syncMarkers();
+      });
+    }else{
+      this._syncMarkers();
+    }
+
 
     // start  auth
     auth('userInfo')
@@ -65,6 +75,59 @@ Page({
 
     // end auth
 
+  },
+
+  _syncMarkers(){
+
+    try{
+      let markers = wx.getStorageSync('markers');
+
+      if(markers){
+        // 先使用缓存渲染
+        this._setMarkerData(markers);
+      }
+    }catch(e){
+      console.log('渲染缓存的 markers 失败');
+    }
+
+    // 请求 markers
+    // 缓存并更新 markers
+    try{
+      let userID = wx.getStorageSync('userID');
+      console.log(userID,'userid');
+      req.getMarkers({userID})
+      .then((res)=>{
+        console.log(res,'res');
+        let mks = res.data.data;
+        console.log(mks, 'mkss');
+        // 缓存 markers
+        api.setStorage({
+          key: 'markers',
+          data: mks
+        });
+
+        // 渲染 markers
+        this._setMarkerData(mks)
+
+      });
+    }catch(e){
+      console.log('远程获取 marker 失败');
+    }
+
+
+  },
+
+  _setMarkerData(mks){
+    this.setData({
+      markers: mks.map(elt=>{
+        return {
+          id: elt._id,
+          title: elt.title,
+          lastTime: elt.events[0].time,
+          times: elt.events.length
+        }
+      })
+    });
   },
 
   // 跳转到符号标记的地图页

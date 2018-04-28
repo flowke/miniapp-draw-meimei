@@ -11,12 +11,8 @@ App({
 
   onLaunch(){
 
-    let id = wx.getStorageSync('userID');
+    
 
-    if(!id){
-      req.login()
-
-    }
 
   },
 
