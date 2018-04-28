@@ -16,7 +16,12 @@ Page({
   },
 
   onLoad(){
+    let userID = wx.getStorageSync('userID');
 
+    req.getMarkers({userID})
+    .then((res)=>{
+      console.log(res);
+    })
   },
 
   // 页面显示时候
