@@ -52,8 +52,8 @@
           <view
              class="desc"
              wx:for="{{detailPanelInfo.incidents}}"
-             wx:key="id"
-             id="{{item.id}}"
+             wx:key="_id"
+             id="{{item._id}}"
              catch:tap="onEditIncident"
           >
             <text class="time">{{tool.toIncidentTime(item.time)}}</text>
@@ -121,8 +121,10 @@
       <map
         id="map"
         class="map"
+        lantitude="{{lat}}"
+        longitude="{{lng}}"
         show-location="{{true}}"
-        bindmarkertap="tapmarker"
+        bindmarkertap="onMarkerTap"
         markers="{{tool.createMarkers(markerData)}}"
         bindtap="tapmarker"
       >

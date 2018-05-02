@@ -17,8 +17,6 @@ Page({
 
   onLoad(){
 
-
-
   },
 
   // 页面显示时候
@@ -132,7 +130,13 @@ Page({
 
   // 跳转到符号标记的地图页
   onGotoMark(e){
-    let {id} = e.currentTarget.dataset;
+    api.navigateTo({
+      url: `/pages/mark/mark?method=check`
+    });
+  },
+  // 根据 mark id 查看某个 mark 的详情
+  onCheckMark(e){
+    let {id} = e.currentTarget;
     api.navigateTo({
       url: `/pages/mark/mark?id=${id}&method=check`
     });

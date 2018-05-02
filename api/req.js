@@ -1,6 +1,6 @@
 const api = require('../helper/api');
 
-const baseURL = 'http://192.168.11.121:3000'
+const baseURL = 'http://192.168.3.18:3000'
 
 let get = (url, data)=>{
 
@@ -61,8 +61,21 @@ exports.login = (msg='登陆中')=>{
     let {data:{data}, header} = res;
 
     wx.setStorageSync('userID', data._id);
-    wx.setStorageSync('sess-cookie',header['Set-Cookie']);
+    wx.setStorageSync('sess-cookie', header['Set-Cookie']);
     wx.hideLoading();
     return data._id;
   });
+}
+
+// 修改 marker 地址
+// {
+//    markerID,
+//    title,
+//    address,
+//    latitude,
+//    longitude,
+// }
+exports.editMarkerAddress = data =>{
+  return postWithCookie('/mark/edit-address',data)
+    .then(res=>res.data)
 }

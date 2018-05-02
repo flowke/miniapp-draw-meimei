@@ -15,19 +15,25 @@ Page({
   // 是 null 则会当前是添加个新的
   whichToFix: null,
 
+  // 打开详情面板时
+  // 是否为 编辑未被持久化的 marker
+  isEidtNewOne: false,
+
   data: {
     hasAuthLocation: true,
     showLocate: {},
     polyline: [],
     markerData:[],
     includePoints: {points:[]},
-
+    lat: null,
+    lng: null,
     // 新添加一个 marker 时, 会显示保存按钮
     isShowSaveButton: false,
     // 详情面板中标题,如: 国贸
     detailPanelInfo: {
-      latitude: null,
-      longitude: null,
+      markerID: null,
+      latitude: 0,
+      longitude: 0,
       title: '',
       address: '', // 详情面板中地址
       isShowIncidentPanel: false, // 是否显示添加事件面板
@@ -51,23 +57,18 @@ Page({
       timingFunction: 'ease-out',
     });
 
-    let {method} = this.query;
+    if(this._isAddMarker()){
 
-    if(method==='add'){
-      this.toMyLocation();
-      this._openDetail();
+      this._showDetailPanelByAdd();
 
-      api.getLocation({type: 'gcj02'})
-      .then(res=>{
-        this._chooseQQMapLocation({
-          latitude: res.latitude,
-          longitude: res.longitude
-        });
-      });
+    }else if(this._isCheckCertainMarker()){
 
-      this.setData({
-        isShowSaveButton: true
-      });
+      let {id} = this.query;
+      this._showDetailPanelByCheck(id);
+
+    }else if(this._isOnlyCheckInMap()){
+
+      this._toMyLocation();
     }
 
   },
@@ -112,50 +113,72 @@ Page({
 
       });
   },
-
-  // 当从授权页面回了
-  // 检查有没有地址授权
-  getAuth({detail}){
-    console.log(detail);
-    if(detail){
-      this.setData({
-        hasAuthLocation: true
-      });
-    }
+  // 进入地图页面的情景 -->
+  // 单纯进入滴入查看地图
+  _isOnlyCheckInMap(){
+    let {method,id} = this.query;
+    return method === 'check' && !id;
   },
-
-  // 去到自己的位置
-  toMyLocation(e){
-    this.mapctx.moveToLocation();
+  // 查看某一个 marker
+  _isCheckCertainMarker(){
+    let {method,id} = this.query;
+    return method === 'check' && !!id;
   },
+  // 是否是添加 marker
+  _isAddMarker(){
+    let {method} = this.query;
+    return method === 'add';
+  },
+  // <---
 
-  // 记录一个地点
-  chooseLocation(e){
-    api.chooseLocation()
-      .then(res=>{
-        let {address, latitude, longitude, name} = res;
-        console.log(name);
-        let {markerData} = this.data;
+  // 打开 marker 详情面板的情景 -->
+  // 添加一个 marker 而打开
+  _showDetailPanelByAdd(){
+    this.isEidtNewOne = true;
+    this._toMyLocation();
+    this._openDetail();
 
+    let {detailPanelInfo} = this.data;
+
+    api.getLocation({type: 'gcj02'})
+    .then(res=>{
+      return this._getQQMapLocation({
+        latitude: res.latitude,
+        longitude: res.longitude
+      })
+      .then(addrInfo=>{
         this.setData({
+          detailPanelInfo: {
+            ...detailPanelInfo,
+            ...addrInfo,
+          }
+        })
+      })
+    });
 
-          showLocate: {
-            latitude, longitude
-          },
-          markerData: [
-            {
-              id: Math.random(),
-              address,
-              latitude,
-              longitude,
-              name
-            },
-            ...markerData
-          ]
-        });
-
-      });
+    this.setData({
+      isShowSaveButton: true
+    });
   },
+  // 查看某个 marker 而打开
+  _showDetailPanelByCheck(id){
+    this.isEidtNewOne = false;
+    let markers = wx.getStorageSync('markers');
+    let marker = markers.filter(elt=>elt._id===id)[0];
+
+    this._openDetail();
+    this.setData({
+      lat: marker.latitude,
+      lng: marker.longitude,
+      detailPanelInfo: {
+        markerID: id,
+        title: marker.title,
+        address: marker.address,
+        incidents: marker.events,
+      }
+    });
+  },
+  // <---
 
   // 展开 mark 信息面板
   _openDetail(){
@@ -174,55 +197,92 @@ Page({
     });
   },
 
-  // 点击 marker
-  tapmarker({markerId}){
-
-    // let marker = this.data.markerData.filter(e=>e.id===markerId)[0];
-
-    this._openDetail();
+  // 当从授权页面回了
+  // 检查有没有地址授权
+  getAuth({detail}){
+    console.log(detail);
+    if(detail){
+      this.setData({
+        hasAuthLocation: true
+      });
+    }
   },
+
+  // 去到自己的位置
+  _toMyLocation(e){
+    this.mapctx.moveToLocation();
+  },
+
+  // 点击 marker
+  onMarkerTap({markerId}){
+    this._showDetailPanelByCheck(markerId);
+  },
+
+  // 详情面板的编辑 -->
 
   // 改变 panel 显示的地址
   onChooseLocation(){
 
     api.chooseLocation()
-      .then(res=>{
-        this._chooseQQMapLocation({
-          latitude: res.latitude,
-          longitude: res.longitude
-        })
-      });
+    .then(res=>{
+      return this._getQQMapLocation({
+        latitude: res.latitude,
+        longitude: res.longitude
+      })
+    })
+    .then(addrInfo=>{
+      let {detailPanelInfo: info} = this.data;
 
+      if(this.isEidtNewOne){
+        // 是在一个新的 marker 里修改地址
+        this.setData({
+          detailPanelInfo: {
+            ...info,
+            ...addrInfo,
+          }
+        });
+
+      }else{
+        // 如果是在一个已经持久化的 marker 里修改地址
+        req.editMarkerAddress({
+          markerID: info.markerID,
+          ...addrInfo
+        })
+        .then(markers=>{
+
+          this.setData({
+            markerData: markers,
+          })
+        })
+      }
+    });
   },
 
   // 传入 经纬度
   // 得到地址的title 和 详情地址
-  _chooseQQMapLocation(location){
+  _getQQMapLocation(location){
     return qqmapAPI.reverseGeocoder({location})
       .then(({result})=>{
 
         let {detailPanelInfo} = this.data;
 
         let {address_reference, formatted_addresses} = result;
-          let title = '';
+        let title = '';
 
-          if(address_reference.famous_area){
-            title = address_reference.famous_area.title;
-          }else if(address_reference.landmark_l1){
-            title = address_reference.landmark_l1.title;
-          }else if(address_reference.landmark_l2){
-            title = address_reference.landmark_l2.title;
-          }
+        if(address_reference.famous_area){
+          title = address_reference.famous_area.title;
+        }else if(address_reference.landmark_l1){
+          title = address_reference.landmark_l1.title;
+        }else if(address_reference.landmark_l2){
+          title = address_reference.landmark_l2.title;
+        }
 
-          this.setData({
-            detailPanelInfo: {
-              ...detailPanelInfo,
-              title,
-              address: formatted_addresses.recommend,
-              ...location
-            }
-          });
-      })
+        return {
+          title,
+          address: formatted_addresses.recommend,
+          ...location
+        };
+      });
   },
 
   // 关闭 marker 详情面板
@@ -303,6 +363,7 @@ Page({
 
     let {incident_desc} = this.input;
 
+    // 如果是添加一个
     if(!this.whichToFix){
       this.setData({
         detailPanelInfo: {
@@ -310,7 +371,7 @@ Page({
           isShowIncidentPanel: false,
           incidents: [
             {
-              id: Math.random().toString(),
+              _id: Math.random().toString(),
               time: incidentTime,
               content: incident_desc
             },
@@ -324,7 +385,7 @@ Page({
           ...detailPanelInfo,
           isShowIncidentPanel: false,
           incidents: incidents.map(elt=>{
-            if(elt.id===this.whichToFix) {
+            if(elt._id===this.whichToFix) {
               elt.time = incidentTime;
               elt.content = incident_desc;
             };
@@ -366,7 +427,7 @@ Page({
 
     let {detailPanelInfo} = this.data;
 
-    let incident = detailPanelInfo.incidents.filter(elt=>elt.id===id)[0];
+    let incident = detailPanelInfo.incidents.filter(elt=>elt._id===id)[0];
 
     this.setData({
       detailPanelInfo: {

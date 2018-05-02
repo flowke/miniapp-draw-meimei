@@ -50,6 +50,7 @@
         wx:for="{{markers}}"
         wx:key="id"
         id="{{item.id}}"
+        catch:tap="onCheckMark"
       >
         <view class="time">{{item.lastTime}}</view>
         <view class="place">
