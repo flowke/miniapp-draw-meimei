@@ -10,14 +10,6 @@ Page({
   input: {},
   // 地址的 query
   query: {},
-  // 事件修改框弹出时,
-  // 如果此有id值, 说明是修改某个事件
-  // 是 null 则会当前是添加个新的
-  whichToFix: null,
-
-  // 打开详情面板时
-  // 是否为 编辑未被持久化的 marker
-  isEidtNewOne: false,
 
   data: {
     hasAuthLocation: true,
@@ -38,6 +30,7 @@ Page({
       address: '', // 详情面板中地址
       isShowIncidentPanel: false, // 是否显示添加事件面板
       incidents: [], // 临时使用的事件数据, 以后从后端获取
+      eventID: null,
       incidentTime: 0, // 编辑事件的时间
       incidentDesc: '', // 编辑时间的描述
     },
@@ -62,7 +55,6 @@ Page({
       this._showDetailPanelByAdd();
 
     }else if(this._isCheckCertainMarker()){
-
       let {id} = this.query;
       this._showDetailPanelByCheck(id);
 
@@ -160,18 +152,31 @@ Page({
       isShowSaveButton: true
     });
   },
+  // 更新 detail面板
+  _updDetailPanelAfterReq(mks, mkID){
+    wx.setStorageSync('markers',mks);
+    this.setData({
+      markers: mks
+    });
+    this._renderDetailPanel(mks, mkID);
+  },
   // 查看某个 marker 而打开
   _showDetailPanelByCheck(id){
-    this.isEidtNewOne = false;
+
     let markers = wx.getStorageSync('markers');
-    let marker = markers.filter(elt=>elt._id===id)[0];
 
     this._openDetail();
+    this._renderDetailPanel(markers, id);
+  },
+  // 渲染 marker 到详情面板
+  _renderDetailPanel(markers, mkID){
+    let marker = markers.filter(elt=>elt._id===mkID)[0];
+
     this.setData({
       lat: marker.latitude,
       lng: marker.longitude,
       detailPanelInfo: {
-        markerID: id,
+        markerID: marker._id,
         title: marker.title,
         address: marker.address,
         incidents: marker.events,
@@ -194,6 +199,31 @@ Page({
     this.setData({
       panelAniData: ani.export(),
       isShowSaveButton: false
+    });
+    this._resetDetailPanel();
+  },
+
+  // 详情面板的打开的情形
+  // true 为正在进行添加一个 marker, 数据没有持久化
+  // false 为正在查看某个已经持久化的 marker
+  _isNewMarker(){
+    return !this.data.detailPanelInfo.markerID;
+  },
+  // 重置 事件编辑面板 信息
+  _resetDetailPanel(){
+    this.setData({
+      detailPanelInfo: {
+        markerID: null,
+        latitude: 0,
+        longitude: 0,
+        title: '',
+        address: '', // 详情面板中地址
+        isShowIncidentPanel: false, // 是否显示添加事件面板
+        incidents: [], // 临时使用的事件数据, 以后从后端获取
+        eventID: null,
+        incidentTime: 0, // 编辑事件的时间
+        incidentDesc: '', // 编辑时间的描述
+      }
     });
   },
 
@@ -237,7 +267,7 @@ Page({
     .then(addrInfo=>{
       let {detailPanelInfo: info} = this.data;
 
-      if(this.isEidtNewOne){
+      if(this._isNewMarker()){
         // 是在一个新的 marker 里修改地址
         this.setData({
           detailPanelInfo: {
@@ -254,20 +284,19 @@ Page({
         })
         .then(({data, code})=>{
           if(code===0){
-            console.log(data);
+
             wx.setStorageSync('markers', data)
             this.setData({
               markerData: data,
             });
             this._showDetailPanelByCheck(info.markerID)
           }
-
-
-
         })
       }
     });
   },
+
+
 
   // 传入 经纬度
   // 得到地址的title 和 详情地址
@@ -327,7 +356,7 @@ Page({
       let markers = res.data.data;
 
       this._closeDetail();
-
+      wx.setStorageSync('markers', markers);
       this.setData({
         markerData: markers
       });
@@ -335,31 +364,40 @@ Page({
 
   },
 
-  // 打开添加事件面板
+  // 打开事件编辑面板
+  // 点击添加事件调用
   onShowIncidentPanel(){
     let {detailPanelInfo} = this.data;
+
     this.setData({
       detailPanelInfo: {
         ...detailPanelInfo,
         isShowIncidentPanel: true,
         incidentTime:  util.DateTo(new Date())
       }
-
     });
   },
-  // 关闭添加事件面板
-  onHideIncidentPanel(){
+  // 打开事件编辑面板
+  // 点击某个事件调用
+  onEditIncident(e){
+
+    let {id} = e.currentTarget;
+
     let {detailPanelInfo} = this.data;
+
+    let incident = detailPanelInfo.incidents.filter(elt=>elt._id===id)[0];
+
     this.setData({
       detailPanelInfo: {
         ...detailPanelInfo,
-        isShowIncidentPanel: false
+        eventID: id,
+        isShowIncidentPanel: true,
+        incidentTime: incident.time,
+        incidentDesc: incident.content
       }
-
     });
-    this.whichToFix = null;
+    this.input.incident_desc = incident.content;
   },
-
   // 保存一个事件
   // 可能是添加一个事件,
   // 也可能是修改某个事件
@@ -367,46 +405,112 @@ Page({
     let {
       detailPanelInfo,
       detailPanelInfo: {
+        markerID,
+        eventID,
         incidentTime,
+        incidentDesc,
         incidents,
       }
     } = this.data;
 
     let {incident_desc} = this.input;
 
-    // 如果是添加一个
-    if(!this.whichToFix){
-      this.setData({
-        detailPanelInfo: {
-          ...detailPanelInfo,
-          isShowIncidentPanel: false,
-          incidents: [
-            {
-              _id: Math.random().toString(),
-              time: incidentTime,
-              content: incident_desc
-            },
-            ...incidents
-          ]
-        }
-      });
+    if(this._isNewMarker()){
+      if(this._isNewEvent()){
+        this.setData({
+          detailPanelInfo: {
+            ...detailPanelInfo,
+            incidents: [
+              {
+                _id: Math.random().toString(),
+                time: incidentTime,
+                content: incident_desc
+              },
+              ...incidents
+            ]
+          }
+        });
+      }else{
+        this.setData({
+          detailPanelInfo: {
+            ...detailPanelInfo,
+            incidents: incidents.map(elt=>{
+              if(elt._id===markerID) {
+                elt.time = incidentTime;
+                elt.content = incident_desc;
+              };
+              return elt;
+            })
+          }
+        });
+      }
     }else{
-      this.setData({
-        detailPanelInfo: {
-          ...detailPanelInfo,
-          isShowIncidentPanel: false,
-          incidents: incidents.map(elt=>{
-            if(elt._id===this.whichToFix) {
-              elt.time = incidentTime;
-              elt.content = incident_desc;
-            };
-            return elt;
-          })
-        }
-      });
+      if(this._isNewEvent()){
+        req.addEvent({
+          markerID,
+          incidentTime,
+          incidentDesc
+        })
+        .then(({code,data})=>{
+          if(code===0){
+            this._updDetailPanelAfterReq(data, markerID);
+          }
+        })
+      }else{
+        req.editEvent({
+          markerID,
+          eventID,
+          incidentTime,
+          incidentDesc
+        })
+        .then(({data, code})=>{
+          if(code===0){
+            console.log(data);
+              this._updDetailPanelAfterReq(data, markerID);
+          }
+
+        })
+      }
     }
+
     // 重置编辑框的修改与保存状态
-    this.whichToFix = null;
+    this._hideEventPanel();
+  },
+  // 关闭编辑事件面板
+  // 点击事件面板取消调用
+  onHideIncidentPanel(){
+    this._hideEventPanel();
+  },
+
+  _hideEventPanel(){
+    let {detailPanelInfo} = this.data;
+    this.setData({
+      detailPanelInfo: {
+        ...detailPanelInfo,
+        isShowIncidentPanel: false,
+        eventID: null,
+        incidentTime: 0,
+        incidentDesc: '',
+      }
+    });
+    this.input.incident_desc = '';
+  },
+
+  // 是新添加一个事件还是修改某个事件而弹出事件编辑面板
+  _isNewEvent(){
+    return !this.data.detailPanelInfo.eventID;
+  },
+  // 重置 事件编辑面板 信息
+  _resetEventPanel(){
+    let {detailPanelInfo} = this.data;
+    this.setData({
+      detailPanelInfo: {
+        ...detailPanelInfo,
+        eventID: null,
+        incidentTime: 0,
+        incidentDesc: '',
+      }
+    });
   },
   // 事件编辑描述输入
   onIncidentDescInput(e){
@@ -418,6 +522,7 @@ Page({
 
     let {detailPanelInfo} = this.data;
     let {incident_desc} = this.input;
+    console.log(this.input);
 
     this.setData({
       detailPanelInfo: {
@@ -428,25 +533,5 @@ Page({
 
     });
   },
-  // 编辑事件
-  onEditIncident(e){
 
-    let {id} = e.currentTarget;
-
-    // 告知当前事件框是在修改某个已经存在的事件事件
-    this.whichToFix = id;
-
-    let {detailPanelInfo} = this.data;
-
-    let incident = detailPanelInfo.incidents.filter(elt=>elt._id===id)[0];
-
-    this.setData({
-      detailPanelInfo: {
-        ...detailPanelInfo,
-        isShowIncidentPanel: true,
-        incidentTime: incident.time,
-        incidentDesc: incident.content
-      }
-    });
-  }
 });

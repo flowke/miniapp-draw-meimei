@@ -80,7 +80,8 @@ Page({
     try{
       let markers = wx.getStorageSync('markers');
 
-      if(markers){
+      if(markers && markers.length){
+
         // 先使用缓存渲染
         this._setMarkerData(markers);
       }
@@ -118,10 +119,11 @@ Page({
   _setMarkerData(mks){
     this.setData({
       markers: mks.map(elt=>{
+
         return {
           id: elt._id,
           title: elt.title,
-          lastTime: elt.events[0].time,
+          lastTime: elt.events.length && elt.events[0].time,
           times: elt.events.length
         }
       })

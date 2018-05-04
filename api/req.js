@@ -1,6 +1,6 @@
 const api = require('../helper/api');
 
-const baseURL = 'http://192.168.0.9:3000'
+const baseURL = 'http://192.168.3.18:3000'
 
 let get = (url, data)=>{
 
@@ -77,5 +77,22 @@ exports.login = (msg='登陆中')=>{
 // }
 exports.editMarkerAddress = data =>{
   return postWithCookie('/mark/edit-address',data)
+    .then(res=>res.data)
+}
+// 编辑修改某个事件
+// markerID
+// eventID
+// incidentTime
+// incidentDesc
+exports.editEvent = data=>{
+  return postWithCookie('/mark/edit-event',data)
+    .then(res=>res.data)
+}
+// 添加一个事件
+// markerID
+// incidentTime
+// incidentDesc
+exports.addEvent = data=>{
+  return postWithCookie('/mark/add-event',data)
     .then(res=>res.data)
 }
