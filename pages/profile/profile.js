@@ -92,12 +92,12 @@ Page({
     // 缓存并更新 markers
     try{
       let userID = wx.getStorageSync('userID');
-      console.log(userID,'userid');
+
       req.getMarkers({userID})
       .then((res)=>{
-        console.log(res,'res');
+
         let mks = res.data.data;
-        console.log(mks, 'mkss');
+
         // 缓存 markers
         api.setStorage({
           key: 'markers',

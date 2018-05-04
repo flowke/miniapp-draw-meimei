@@ -200,7 +200,7 @@ Page({
   // 当从授权页面回了
   // 检查有没有地址授权
   getAuth({detail}){
-    console.log(detail);
+
     if(detail){
       this.setData({
         hasAuthLocation: true
@@ -209,8 +209,12 @@ Page({
   },
 
   // 去到自己的位置
-  _toMyLocation(e){
+  _toMyLocation(){
     this.mapctx.moveToLocation();
+  },
+
+  onToMyLocation(){
+    this._toMyLocation();
   },
 
   // 点击 marker
@@ -248,11 +252,18 @@ Page({
           markerID: info.markerID,
           ...addrInfo
         })
-        .then(markers=>{
+        .then(({data, code})=>{
+          if(code===0){
+            console.log(data);
+            wx.setStorageSync('markers', data)
+            this.setData({
+              markerData: data,
+            });
+            this._showDetailPanelByCheck(info.markerID)
+          }
 
-          this.setData({
-            markerData: markers,
-          })
+
+
         })
       }
     });

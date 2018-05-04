@@ -131,7 +131,7 @@
         <!-- 回到当前定位 -->
         <cover-view
           class="locate_icon_wrap"
-          bind:tap="toMyLocation"
+          bind:tap="onToMyLocation"
         >
           <cover-image class="icon_size" src="./img/locate.png"/>
         </cover-view>
