@@ -156,7 +156,7 @@ Page({
   _updDetailPanelAfterReq(mks, mkID){
     wx.setStorageSync('markers',mks);
     this.setData({
-      markers: mks
+      markerData: mks
     });
     this._renderDetailPanel(mks, mkID);
   },
@@ -176,6 +176,8 @@ Page({
       lat: marker.latitude,
       lng: marker.longitude,
       detailPanelInfo: {
+        latitude: marker.latitude,
+        longitude: marker.longitude,
         markerID: marker._id,
         title: marker.title,
         address: marker.address,
@@ -284,19 +286,12 @@ Page({
         })
         .then(({data, code})=>{
           if(code===0){
-
-            wx.setStorageSync('markers', data)
-            this.setData({
-              markerData: data,
-            });
-            this._showDetailPanelByCheck(info.markerID)
+            this._updDetailPanelAfterReq(data, info.markerID)
           }
         })
       }
     });
   },
-
-
 
   // 传入 经纬度
   // 得到地址的title 和 详情地址
@@ -316,7 +311,7 @@ Page({
         }else if(address_reference.landmark_l2){
           title = address_reference.landmark_l2.title;
         }
-
+ed
         return {
           title,
           address: formatted_addresses.recommend,
@@ -342,15 +337,12 @@ Page({
       incidents,
     } = this.data.detailPanelInfo;
 
-    let userID = wx.getStorageSync('userID');
-
     req.addMark({
       latitude,
       longitude,
       title,
       address,
       incidents,
-      userID
     })
     .then(res=>{
       let markers = res.data.data;
@@ -408,10 +400,11 @@ Page({
         markerID,
         eventID,
         incidentTime,
-        incidentDesc,
         incidents,
       }
     } = this.data;
+
+    let incidentDesc = this.input.incident_desc;
 
     let {incident_desc} = this.input;
 
