@@ -9,12 +9,14 @@ App({
     userInfo: null
   },
 
-  onLaunch(){
+  loginPromise: req.login(),
 
-    
+  onLaunch(){
 
 
   },
+
+
 
   updateGlobalUserInfo(userInfo){
     this.globalData.userInfo = userInfo;

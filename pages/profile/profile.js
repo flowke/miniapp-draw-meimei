@@ -16,23 +16,19 @@ Page({
   },
 
   onLoad(){
-
+    req.login()
+    .then(id=>{
+      // 同步 marker 信息
+      this._syncMarkers();
+    });
   },
 
   // 页面显示时候
   onShow(){
 
-    let sid = wx.getStorageSync('sess-cookie');
 
-    if(!sid){
-      req.login()
-      .then(id=>{
-        // 同步 marker 信息
-        this._syncMarkers();
-      });
-    }else{
-      this._syncMarkers();
-    }
+
+    this._syncMarkers();
 
 
     // start  auth
@@ -77,27 +73,14 @@ Page({
 
   _syncMarkers(){
 
-    try{
-      let markers = wx.getStorageSync('markers');
-
-      if(markers && markers.length){
-
-        // 先使用缓存渲染
-        this._setMarkerData(markers);
-      }
-    }catch(e){
-      console.log('渲染缓存的 markers 失败');
-    }
-
     // 请求 markers
     // 缓存并更新 markers
-    try{
-      let userID = wx.getStorageSync('userID');
+    let userID = wx.getStorageSync('userID');
 
-      req.getMarkers({userID})
-      .then((res)=>{
-
-        let mks = res.data.data;
+    req.getMarkers({userID})
+    .then(({data:res})=>{
+      if(res.code===0){
+        let mks = res.data;
 
         // 缓存 markers
         api.setStorage({
@@ -106,14 +89,27 @@ Page({
         });
 
         // 渲染 markers
+        console.log('使用已持久化的数据渲染');
         this._setMarkerData(mks)
 
-      });
-    }catch(e){
-      console.log('远程获取 marker 失败');
-    }
+      }else{
+        console.log(res);
+      }
+    })
+    .catch(e=>{
+      try{
+        let markers = wx.getStorageSync('markers');
 
+        if(markers && markers.length){
 
+          // 先使用缓存渲染
+          this._setMarkerData(markers);
+          console.log('使用缓存渲染');
+        }
+      }catch(e){
+        console.log('渲染缓存的 markers 失败');
+      }
+    });
   },
 
   _setMarkerData(mks){

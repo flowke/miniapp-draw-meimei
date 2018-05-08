@@ -36,7 +36,8 @@ let postWithCookie = (url, data)=>{
     header: {
       cookie: wx.getStorageSync('sess-cookie')
     }
-  });
+  })
+
 };
 
 // 请求保存 mark
@@ -59,11 +60,9 @@ exports.login = (msg='登陆中')=>{
   })
   .then(res=>{
     let {data:{data}, header} = res;
-
     wx.setStorageSync('userID', data._id);
     wx.setStorageSync('sess-cookie', header['Set-Cookie']);
     wx.hideLoading();
-    return data._id;
   });
 }
 

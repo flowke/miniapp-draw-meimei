@@ -342,7 +342,10 @@ ed
       longitude,
       title,
       address,
-      incidents,
+      incidents: incidents.map(elt=>{
+        let {_id,...rest} = elt;
+        return rest;
+      })
     })
     .then(res=>{
       let markers = res.data.data;
@@ -408,6 +411,7 @@ ed
 
     let {incident_desc} = this.input;
 
+    // new marker 降不会持久化数据
     if(this._isNewMarker()){
       if(this._isNewEvent()){
         this.setData({
@@ -438,6 +442,7 @@ ed
         });
       }
     }else{
+      // 持久化数据
       if(this._isNewEvent()){
         req.addEvent({
           markerID,
