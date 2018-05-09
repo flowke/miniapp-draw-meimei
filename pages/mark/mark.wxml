@@ -121,12 +121,9 @@
       <map
         id="map"
         class="map"
-        lantitude="{{lat}}"
-        longitude="{{lng}}"
         show-location="{{true}}"
         bindmarkertap="onMarkerTap"
         markers="{{tool.createMarkers(markerData)}}"
-        bindtap="tapmarker"
       >
         <!-- 回到当前定位 -->
         <cover-view
@@ -136,10 +133,10 @@
           <cover-image class="icon_size" src="./img/locate.png"/>
         </cover-view>
 
-        <!-- 选择一个位置 -->
+        <!-- 选择添加一个 marker -->
         <cover-view
           class="mark_icon_wrap"
-          bind:tap="chooseLocation"
+          bind:tap="onAddMark"
         >
           <cover-image class="icon_size" src="./img/flag.png"/>
         </cover-view>

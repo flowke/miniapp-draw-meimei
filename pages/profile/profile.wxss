@@ -48,18 +48,36 @@
   height: 140rpx;
   width: 100%;
   background-color: #5CA8FA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
 }
+
+.profile_card_box .goals .achievement{
+  width: 80%;
+  text-align: center;
+  font-size: 13pt;
+  background: #fff;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+  /* color: #fff; */
+}
+
 
 /* 地点列表 */
 .place_list{
   margin: 30rpx;
   padding: 30rpx;
-  height: 500rpx;
+  /* min-height: 250rpx; */
   background-color: #fff;
   box-shadow: 0 0 9rpx 3rpx rgba(0, 0, 0, 0.14);
   border-radius: 10rpx;
   overflow: hidden;
+}
+.place_list .hint_to_add{
+  text-align: center;
+  color: #CBD0D5;
 }
 .place_list .place_item{
   display: flex;
@@ -74,24 +92,38 @@
   color: #353535;
   font-size: 14pt;
   font-weight: bold;
-  /* background-color: red; */
+  justify-content: space-between;
 }
+.place_list .place_item.title .op{
+  color: #45AEEB;
+}
+
 .place_list .place_item .time{
   flex: 2;
 }
 .place_list .place_item .place{
   flex: 3;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+.place_list .place_item .place_name{
+  /* background: blue; */
+  max-width: 6em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .place_list .place .spot{
   color: #fff;
   line-height: 1em;
-  margin-right: 60rpx;
+  margin-right: 50rpx;
   background-color: #E65B5B;
-  padding: 12rpx;
-  border-radius: 50%;
+  padding: 12rpx 22rpx;
+  width: 1.5em;
+  text-align: center;
+  border-radius: 1em;
   font-size: 10pt;
   box-shadow: 2rpx 4rpx 5rpx 3rpx rgba(254, 24, 24, 0.20);
 }

@@ -7,29 +7,39 @@ let p = 'https://pic.qqtn.com/up/2017-12/15138357828139708.jpg';
 const app = getApp();
 
 Page({
+  selMarkers: [],
   data: {
     hasAuthUserInfo: true,
     userInfo: {},
     hasUserInfo: false,
     isShowAddingModel: false,
     markers: [],
+    isMultiSel: false,
+    curtSel: '',
+    isSelAll: false,
   },
 
   onLoad(){
-    req.login()
-    .then(id=>{
-      // 同步 marker 信息
-      this._syncMarkers();
-    });
+
   },
 
   // 页面显示时候
   onShow(){
 
 
+    req.checkLogin()
+    .then(res=>{
+      if(res.code===0){
 
-    this._syncMarkers();
-
+        this._syncMarkers();
+      }else{
+        req.login()
+        .then(id=>{
+          // 同步 marker 信息
+          this._syncMarkers();
+        });
+      }
+    })
 
     // start  auth
     auth('userInfo')
@@ -133,11 +143,59 @@ Page({
     });
   },
   // 根据 mark id 查看某个 mark 的详情
-  onCheckMark(e){
-    let {id} = e.currentTarget;
-    api.navigateTo({
-      url: `/pages/mark/mark?id=${id}&method=check`
+  onPlaceItemTap(e){
+    let {isMultiSel} = this.data;
+    if(isMultiSel){
+
+    }else{
+      let {id} = e.currentTarget;
+      api.navigateTo({
+        url: `/pages/mark/mark?id=${id}&method=check`
+      });
+    }
+
+  },
+
+  // 手指停留开始多选
+  onOpenChooseMark(e){
+    this.selMarkers = [e.currentTarget.id];
+
+    let isSelAll = this.data.markers.length===1;
+
+    this.setData({
+      isMultiSel: true,
+      curtSel: e.currentTarget.id,
+      isSelAll
     });
+
+  },
+  onCheckboxChange({detail}){
+    this.selMarkers = detail.value;
+    let isSelAll = this.selMarkers.length===this.data.markers.length;
+    this.setData({
+      isSelAll,
+      isToggleAllEffect: false
+    })
+  },
+  onToggleAll(){
+    this.selMarkers = this.data.markers.map(elt=>elt.id);
+    this.setData({
+      isSelAll: !this.data.isSelAll,
+      isToggleAllEffect: true
+    });
+
+  },
+  onDelete(){
+
+  },
+  onCancelSel(){
+    this.setData({
+      isMultiSel: false,
+      curtSel: '',
+      isSelAll: false,
+      isToggleAllEffect: false
+    });
+    this.selMarkers = [];
   },
 
   // 添加一个地点标记

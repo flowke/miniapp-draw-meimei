@@ -17,8 +17,8 @@ Page({
     polyline: [],
     markerData:[],
     includePoints: {points:[]},
-    lat: null,
-    lng: null,
+    lat: 0,
+    lng: 0,
     // 新添加一个 marker 时, 会显示保存按钮
     isShowSaveButton: false,
     // 详情面板中标题,如: 国贸
@@ -56,7 +56,8 @@ Page({
 
     }else if(this._isCheckCertainMarker()){
       let {id} = this.query;
-      this._showDetailPanelByCheck(id);
+      this._showDetailPanelByCheck(id, true);
+
 
     }else if(this._isOnlyCheckInMap()){
 
@@ -158,23 +159,40 @@ Page({
     this.setData({
       markerData: mks
     });
-    this._renderDetailPanel(mks, mkID);
+    let marker = this._findMarkerByID(mks, mkID);
+    this._renderDetailPanel(marker);
   },
   // 查看某个 marker 而打开
-  _showDetailPanelByCheck(id){
+  _showDetailPanelByCheck(id, isIncludePoints=false){
 
     let markers = wx.getStorageSync('markers');
 
     this._openDetail();
-    this._renderDetailPanel(markers, id);
+    let marker = this._findMarkerByID(markers, id);
+    this._renderDetailPanel(marker);
+
+    if(isIncludePoints){
+      this._showIncludePoints([
+        {
+          latitude: marker.latitude,
+          longitude: marker.longitude,
+        }
+      ]);
+    }
+
+  },
+  _showIncludePoints(points){
+    this.mapctx.includePoints({
+      points,
+      padding: [150]
+    })
+  },
+  _findMarkerByID(markers, mkID){
+    return markers.find(elt=>elt._id===mkID);
   },
   // 渲染 marker 到详情面板
-  _renderDetailPanel(markers, mkID){
-    let marker = markers.filter(elt=>elt._id===mkID)[0];
-
+  _renderDetailPanel(marker){
     this.setData({
-      lat: marker.latitude,
-      lng: marker.longitude,
       detailPanelInfo: {
         latitude: marker.latitude,
         longitude: marker.longitude,
@@ -249,6 +267,10 @@ Page({
     this._toMyLocation();
   },
 
+  onAddMark(){
+    this._showDetailPanelByAdd();
+  },
+
   // 点击 marker
   onMarkerTap({markerId}){
     this._showDetailPanelByCheck(markerId);
@@ -261,10 +283,21 @@ Page({
 
     api.chooseLocation()
     .then(res=>{
-      return this._getQQMapLocation({
-        latitude: res.latitude,
-        longitude: res.longitude
-      })
+      console.log(res);
+      if(res.name && res.address){
+        return {
+          title: res.name,
+          address: res.address,
+          latitude: res.latitude,
+          longitude: res.longitude
+        }
+      }else{
+        return this._getQQMapLocation({
+          latitude: res.latitude,
+          longitude: res.longitude
+        })
+      }
+
     })
     .then(addrInfo=>{
       let {detailPanelInfo: info} = this.data;
@@ -311,7 +344,7 @@ Page({
         }else if(address_reference.landmark_l2){
           title = address_reference.landmark_l2.title;
         }
-ed
+
         return {
           title,
           address: formatted_addresses.recommend,

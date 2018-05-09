@@ -19,8 +19,10 @@
         class="goals"
         catch:tap="onGotoMark"
       >
-        <view class="achievement"></view>
-        <view class="want_to"></view>
+        <view class="achievement">
+          已去过 {{markers.length}} 处, 去查看
+        </view>
+
       </view>
 
       <!-- <view class="done_tags_box">
@@ -41,24 +43,65 @@
 
     <view class="place_list">
       <view class="place_list_header"></view>
-      <view class="place_item title">
-        <view class="time">时间</view>
-        <view class="place">地点</view>
-      </view>
-      <view
-        class="place_item"
-        wx:for="{{markers}}"
-        wx:key="id"
-        id="{{item.id}}"
-        catch:tap="onCheckMark"
+      <block
+        wx:if="{{markers.length>0}}"
       >
-        <view class="time">{{item.lastTime}}</view>
-        <view class="place">
-          {{item.title}}
-          <view class="spot">+ {{item.times}}</view>
-        </view>
-      </view>
+        <view class="place_item title">
 
+          <block
+            wx:if="{{isMultiSel}}"
+          >
+            <view
+              class="op"
+              bind:tap="onToggleAll"
+            > {{isSelAll? '取消选择': '选择'}} </view>
+            <view class="op"> 删除 </view>
+            <view class="op" catch:tap="onCancelSel"> 取消 </view>
+          </block>
+          <block
+            wx:else
+          >
+            <view class="time">时间</view>
+            <view class="place">地点</view>
+          </block>
+
+        </view>
+        <checkbox-group
+          bindchange="onCheckboxChange"
+        >
+          <label
+            class="place_item"
+            wx:for="{{markers}}"
+            wx:key="id"
+            id="{{item.id}}"
+            bind:tap="onPlaceItemTap"
+            catch:longpress="onOpenChooseMark"
+          >
+
+            <checkbox
+              wx:if="{{isMultiSel}}"
+              value="{{item.id}}"
+              checked="{{!isToggleAllEffect? curtSel===item.id : isSelAll}}"
+            />
+            <view class="time">{{item.lastTime}}</view>
+            <view class="place">
+              <!-- {{item.title}} -->
+              <view class="place_name">
+                {{item.title}}
+              </view>
+              <view class="spot">{{item.times>9? "10+": item.times}}</view>
+            </view>
+          </label>
+        </checkbox-group>
+
+      </block>
+      <block
+        wx:else
+      >
+        <view class="hint_to_add" bind:tap="onAddMark">
+          还没有记录, 去添加~~
+        </view>
+      </block>
     </view>
 
     <!-- 添加按钮 -->
@@ -66,10 +109,8 @@
       class="add_button"
       catch:tap="onAddMark"
     >
-      <!-- <navigator
-        hover-class="none"
-        url="/pages/mark/mark"
-      >+</navigator> -->
+      <!-- <view>+</view> -->
+      <!-- + -->
     </view>
 
   </block>

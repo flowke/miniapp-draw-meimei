@@ -1,6 +1,6 @@
 const api = require('../helper/api');
 
-const baseURL = 'http://192.168.0.9:3000'
+const baseURL = 'http://192.168.11.10:3000'
 
 let get = (url, data)=>{
 
@@ -93,5 +93,10 @@ exports.editEvent = data=>{
 // incidentDesc
 exports.addEvent = data=>{
   return postWithCookie('/mark/add-event',data)
+    .then(res=>res.data)
+}
+
+exports.checkLogin = ()=>{
+  return postWithCookie('/user/checkLogin')
     .then(res=>res.data)
 }

@@ -9,8 +9,6 @@ App({
     userInfo: null
   },
 
-  loginPromise: req.login(),
-
   onLaunch(){
 
 
