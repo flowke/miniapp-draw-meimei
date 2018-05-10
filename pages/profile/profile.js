@@ -14,8 +14,11 @@ Page({
     hasUserInfo: false,
     isShowAddingModel: false,
     markers: [],
+    // 是否切换为选择删除模式模式
     isMultiSel: false,
-    curtSel: '',
+    // 当前选中的
+    curtSel: {},
+    // 是否为全部选择
     isSelAll: false,
   },
 
@@ -92,12 +95,6 @@ Page({
       if(res.code===0){
         let mks = res.data;
 
-        // 缓存 markers
-        api.setStorage({
-          key: 'markers',
-          data: mks
-        });
-
         // 渲染 markers
         console.log('使用已持久化的数据渲染');
         this._setMarkerData(mks)
@@ -113,7 +110,7 @@ Page({
         if(markers && markers.length){
 
           // 先使用缓存渲染
-          this._setMarkerData(markers);
+          this._renderMarkers(markers);
           console.log('使用缓存渲染');
         }
       }catch(e){
@@ -123,6 +120,14 @@ Page({
   },
 
   _setMarkerData(mks){
+    // 缓存 markers
+    api.setStorage({
+      key: 'markers',
+      data: mks
+    });
+    this._renderMarkers(mks);
+  },
+  _renderMarkers(mks){
     this.setData({
       markers: mks.map(elt=>{
 
@@ -130,7 +135,7 @@ Page({
           id: elt._id,
           title: elt.title,
           lastTime: elt.events.length && elt.events[0].time,
-          times: elt.events.length
+          times: elt.events.length,
         }
       })
     });
@@ -164,7 +169,7 @@ Page({
 
     this.setData({
       isMultiSel: true,
-      curtSel: e.currentTarget.id,
+      curtSel: {[e.currentTarget.id]: true},
       isSelAll
     });
 
@@ -174,26 +179,53 @@ Page({
     let isSelAll = this.selMarkers.length===this.data.markers.length;
     this.setData({
       isSelAll,
-      isToggleAllEffect: false
+      curtSel: this.selMarkers.reduce((accu,elt)=>{
+        accu[elt] = true;
+        return accu;
+      },{})
     })
   },
   onToggleAll(){
-    this.selMarkers = this.data.markers.map(elt=>elt.id);
+
+    let isSelAll = this.data.isSelAll;
+    this.selMarkers =[];
+    let curtSel = {};
+    if(!isSelAll){
+      this.selMarkers = this.data.markers.map(elt=>{
+        curtSel[elt.id] = true;
+        return elt.id
+      });
+    }
+
     this.setData({
-      isSelAll: !this.data.isSelAll,
-      isToggleAllEffect: true
+      isSelAll: !isSelAll,
+      curtSel
+
     });
 
   },
   onDelete(){
+    if(!this.selMarkers.length) return;
+
+    req.deleteMark({ids:this.selMarkers})
+    .then(res=>{
+
+      if(res.code===0){
+        this._setMarkerData(res.data);
+      };
+      this._resetSelMarkers();
+    })
 
   },
   onCancelSel(){
+    this._resetSelMarkers();
+  },
+  _resetSelMarkers(){
     this.setData({
       isMultiSel: false,
-      curtSel: '',
+      curtSel: {},
       isSelAll: false,
-      isToggleAllEffect: false
+
     });
     this.selMarkers = [];
   },

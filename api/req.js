@@ -43,6 +43,11 @@ let postWithCookie = (url, data)=>{
 // 请求保存 mark
 exports.addMark = (data)=>postWithCookie('/mark/add', data);
 
+// {
+//   ids: [id...]
+// }
+exports.deleteMark = (data)=>postWithCookie('/mark/delete', data).then(res=>res.data);
+
 // 请求获取 mark
 exports.getMarkers = (data)=>getWithCookie('/mark/get', data);
 
@@ -93,6 +98,14 @@ exports.editEvent = data=>{
 // incidentDesc
 exports.addEvent = data=>{
   return postWithCookie('/mark/add-event',data)
+    .then(res=>res.data)
+}
+// {
+//   markerID
+//   eventID
+// }
+exports.deleteEvent = data=>{
+  return postWithCookie('/mark/delete-event',data)
     .then(res=>res.data)
 }
 

@@ -55,7 +55,7 @@
               class="op"
               bind:tap="onToggleAll"
             > {{isSelAll? '取消选择': '选择'}} </view>
-            <view class="op"> 删除 </view>
+            <view class="op" catch:tap="onDelete"> 删除 </view>
             <view class="op" catch:tap="onCancelSel"> 取消 </view>
           </block>
           <block
@@ -81,7 +81,7 @@
             <checkbox
               wx:if="{{isMultiSel}}"
               value="{{item.id}}"
-              checked="{{!isToggleAllEffect? curtSel===item.id : isSelAll}}"
+              checked="{{!!curtSel[item.id]}}"
             />
             <view class="time">{{item.lastTime}}</view>
             <view class="place">

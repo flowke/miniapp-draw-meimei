@@ -26,6 +26,7 @@
         <view
           class="title"
             catch:tap="onChooseLocation"
+            catch:longpress="onDeleteMarker"
           >
           <text>{{detailPanelInfo.title}}</text>
         </view>
@@ -33,6 +34,7 @@
         <view
           class="address"
           catch:tap="onChooseLocation"
+          catch:longpress="onDeleteMarker"
         >
           <text>{{detailPanelInfo.address}}</text>
         </view>
@@ -55,6 +57,7 @@
              wx:key="_id"
              id="{{item._id}}"
              catch:tap="onEditIncident"
+             catch:longpress="onDeleteIncident"
           >
             <text class="time">{{tool.toIncidentTime(item.time)}}</text>
             <view>{{item.content}}</view>
@@ -98,7 +101,7 @@
          <button
            size="mini"
            type="primary"
-           catch:tap="onSaveIincident"
+           catch:tap="onSaveIncident"
          > 确认</button>
        </view>
       </view>

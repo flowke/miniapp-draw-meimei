@@ -179,7 +179,6 @@ Page({
         }
       ]);
     }
-
   },
   _showIncludePoints(points){
     this.mapctx.includePoints({
@@ -325,7 +324,28 @@ Page({
       }
     });
   },
+  onDeleteMarker(){
+    let {markerID} = this.data.detailPanelInfo;
+    api.showModal({
+      content: '确定删除本记录么',
+      confirmColor: '#ED3333'
+    })
+    .then(res=>{
+      if(!res.cancel){
+        req.deleteMark({ids:[markerID]})
+        .then(res=>{
+          if(re.code===0){
+            this._closeDetail();
+            wx.setStorageSync('markers', res.markers);
+            this.setData({
+              markerData: res.markers
+            });
+          };
+        })
+      }
 
+    })
+  },
   // 传入 经纬度
   // 得到地址的title 和 详情地址
   _getQQMapLocation(location){
@@ -429,7 +449,7 @@ Page({
   // 保存一个事件
   // 可能是添加一个事件,
   // 也可能是修改某个事件
-  onSaveIincident(){
+  onSaveIncident(){
     let {
       detailPanelInfo,
       detailPanelInfo: {
@@ -496,7 +516,7 @@ Page({
         })
         .then(({data, code})=>{
           if(code===0){
-            console.log(data);
+
               this._updDetailPanelAfterReq(data, markerID);
           }
 
@@ -506,6 +526,29 @@ Page({
 
     // 重置编辑框的修改与保存状态
     this._hideEventPanel();
+  },
+
+  onDeleteIncident({currentTarget:el}){
+    let {id: eventID} = el;
+    let {markerID} = this.data.detailPanelInfo;
+    api.showModal({
+      content: '确定要删除这个事件么'
+    })
+    .then(res=>{
+      if(!res.cancel){
+        req.deleteEvent({
+          eventID,
+          markerID
+        })
+        .then(res=>{
+          if(res.code===0){
+            this._updDetailPanelAfterReq(res.data, markerID)
+          }
+        });
+      };
+    })
+
+
   },
   // 关闭编辑事件面板
   // 点击事件面板取消调用
@@ -553,7 +596,6 @@ Page({
 
     let {detailPanelInfo} = this.data;
     let {incident_desc} = this.input;
-    console.log(this.input);
 
     this.setData({
       detailPanelInfo: {
