@@ -4,6 +4,14 @@
   <!-- 用用户信息授权 -->
   <block wx:if="{{hasAuthUserInfo && hasUserInfo}}">
     <view class="profile_card_box">
+      <button
+        class="forward_button"
+        plain
+        bind:tap="f"
+      >
+          <image class="forward_img" src="./imgs/forward.png"></image>
+      </button>
+
       <!-- 头像 -->
       <view class="avatar_wrap">
         <image

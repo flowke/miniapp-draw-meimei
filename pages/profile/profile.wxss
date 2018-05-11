@@ -7,6 +7,7 @@
 }
 
 .profile_card_box{
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,6 +17,20 @@
   box-shadow: 0 0 9rpx 3rpx rgba(0, 0, 0, 0.14);
   border-radius: 10rpx;
   overflow: hidden;
+}
+.profile_card_box .forward_button{
+  width: 80rpx;
+  height: 80rpx;
+  position: absolute;
+  right: 20rpx;
+  top: 10rpx;
+  background: none;
+  border:none;
+  padding: 0;
+}
+.profile_card_box .forward_img{
+  width: 100%;
+  height: 100%;
 }
 
 .profile_card_box .avatar_wrap{

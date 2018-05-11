@@ -22,6 +22,22 @@ Page({
     isSelAll: false,
   },
 
+  onShareAppMessage({from, target}){
+    return {
+      title: '脚步与你',
+      path: '/pages/profile/profile'
+    }
+  },
+  f(){
+    console.log('9');
+    wx.getShareInfo({
+      withShareTicket: true,
+      success(re){
+        console.log(re,'re');
+      }
+    });
+  },
+
   onLoad(){
 
   },
