@@ -12,3 +12,9 @@ module.exports = function(scope){
       }
     });
 }
+
+
+module.exports.getAuth = (scope)=>{
+  return api.getSetting()
+    .then(({authSetting})=>!!authSetting[`scope.${scope}`]);
+}

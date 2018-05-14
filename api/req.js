@@ -49,7 +49,10 @@ exports.addMark = (data)=>postWithCookie('/mark/add', data);
 exports.deleteMark = (data)=>postWithCookie('/mark/delete', data).then(res=>res.data);
 
 // 请求获取 mark
-exports.getMarkers = (data)=>getWithCookie('/mark/get', data);
+// {
+//   userID
+// }
+exports.getMarkers = (userID)=>getWithCookie('/mark/get', {userID}).then(res=>res.data);
 
 // 登陆
 exports.login = (msg='登陆中')=>{
@@ -68,7 +71,28 @@ exports.login = (msg='登陆中')=>{
     wx.setStorageSync('userID', data._id);
     wx.setStorageSync('sess-cookie', header['Set-Cookie']);
     wx.hideLoading();
+    return data._id;
   });
+}
+// {
+//   userInfo
+// }
+exports.saveUserInfo = (userInfo)=>{
+  return postWithCookie('/user/save-userinfo', {
+    userInfo
+  }).then(res=>res.data)
+}
+// 获取他人的 profile 信息
+// {
+//   userID
+// }
+exports.getProfile = (userID)=>{
+  return api.request({
+    url: baseURL + '/user/get-profile',
+    data: {
+      userID
+    }
+  }).then(res=>res.data);
 }
 
 // 修改 marker 地址

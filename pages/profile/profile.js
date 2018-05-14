@@ -9,10 +9,9 @@ const app = getApp();
 Page({
   selMarkers: [],
   data: {
-    hasAuthUserInfo: true,
-    userInfo: {},
-    hasUserInfo: false,
-    isShowAddingModel: false,
+    hasReqAuth: false,
+    isSelf: true, //是查看自己还是好友
+    userInfo: null,
     markers: [],
     // 是否切换为选择删除模式模式
     isMultiSel: false,
@@ -28,114 +27,98 @@ Page({
       path: '/pages/profile/profile'
     }
   },
-  f(){
-    console.log('9');
-    wx.getShareInfo({
-      withShareTicket: true,
-      success(re){
-        console.log(re,'re');
-      }
-    });
-  },
 
-  onLoad(){
-
+  onLoad(query){
+    this.query = query;
+    this.setData({
+      isSelf: !this.query.userID
+    })
   },
 
   // 页面显示时候
   onShow(){
 
+    let {isSelf} = this.data;
 
-    req.checkLogin()
-    .then(res=>{
-      if(res.code===0){
-
-        this._syncMarkers();
-      }else{
-        req.login()
-        .then(id=>{
-          // 同步 marker 信息
-          this._syncMarkers();
-        });
-      }
-    })
-
-    // start  auth
-    auth('userInfo')
-      .then(ret=>{
-        // 授权成功
-
-        if(app.globalData.userInfo){
+    if(!isSelf){
+      req.getProfile(wx.getStorageSync('userID'))
+      .then(({code, data})=>{
+        if(code===0){
+          console.log(data);
           this.setData({
-            hasAuthUserInfo: true,
-            hasUserInfo: true,
-            userInfo: app.globalData.userInfo
+            userInfo: data.userInfo
           });
+          this._renderMarkers(data.markers);
+        }
+
+      });
+    }else{
+      // 初始化 marker 信息
+      req.checkLogin()
+      .then(res=>{
+        if(res.code===0){
+          return wx.getStorageSync('userID');
         }else{
-          // 获取用户信息
-          api.getUserInfo({withCredentials: true})
-          .then(ret=>{
-            console.log(ret);
-            this.setData({
-              userInfo: ret.userInfo,
-              hasAuthUserInfo: true,
-              hasUserInfo: true
-            });
-            app.updateGlobalUserInfo(ret.userInfo)
-          })
-          .catch(e=>{
-            // 获取用户信息失败
-            console.log(e);
-          });
+          return req.login();
         }
       })
-      .catch(()=>{
-        // 授权失败
-        this.setData({
-          hasAuthUserInfo: false
-        });
+      .then(userID=>isSelf? userID: this.query.userID)
+      .then(userID=>this._getMarkers(userID))
+      .then(mks=>{
+        if(isSelf){
+          this._renderMksWithCache(mks);
+        }else{
+          this._renderMarkers(mks);
+        }
       });
 
-    // end auth
+      // start  auth
+      auth.getAuth('userInfo')
+      .then(hasAuth=>{
 
-  },
 
-  _syncMarkers(){
+        let {userInfo} = app.globalData;
 
-    // 请求 markers
-    // 缓存并更新 markers
-    let userID = wx.getStorageSync('userID');
-
-    req.getMarkers({userID})
-    .then(({data:res})=>{
-      if(res.code===0){
-        let mks = res.data;
-
-        // 渲染 markers
-        console.log('使用已持久化的数据渲染');
-        this._setMarkerData(mks)
-
-      }else{
-        console.log(res);
-      }
-    })
-    .catch(e=>{
-      try{
-        let markers = wx.getStorageSync('markers');
-
-        if(markers && markers.length){
-
-          // 先使用缓存渲染
-          this._renderMarkers(markers);
-          console.log('使用缓存渲染');
+        if(hasAuth && userInfo){
+          return userInfo;
+        }else if(hasAuth && !userInfo){
+          return api.getUserInfo({withCredentials: true})
+          .then(ret=>ret.userInfo)
+        }else{
+          return null;
         }
-      }catch(e){
-        console.log('渲染缓存的 markers 失败');
-      }
-    });
-  },
 
-  _setMarkerData(mks){
+      })
+      .then(userInfo=>{
+        console.log(userInfo);
+        if(!userInfo){
+          this.setData({
+            hasReqAuth: true,
+          });
+        }else{
+          this.setData({
+            userInfo
+          });
+          app.updateGlobalUserInfo(userInfo)
+        }
+      })
+      // end auth
+    }
+
+
+
+  },
+  // 获取 markers
+  _getMarkers(userID){
+    return req.getMarkers(userID)
+    .then(res=>{
+      if(res.code!==0) console.log('没获取到 marker');
+      return res;
+    })
+    .then(({data, code})=>code===0? data : []);
+  },
+  // 缓存并渲染 marker,
+  _renderMksWithCache(mks){
     // 缓存 markers
     api.setStorage({
       key: 'markers',
@@ -143,6 +126,7 @@ Page({
     });
     this._renderMarkers(mks);
   },
+  // 渲染 markers
   _renderMarkers(mks){
     this.setData({
       markers: mks.map(elt=>{
@@ -155,6 +139,17 @@ Page({
         }
       })
     });
+  },
+
+  onGetUserinfo({detail}){
+    if(!detail.userInfo) return;
+    this.setData({
+      userInfo: detail.userInfo
+    });
+    req.saveUserInfo(detail.userInfo)
+    .then(res=>{
+      console.log(res);
+    })
   },
 
   // 跳转到符号标记的地图页
@@ -227,7 +222,7 @@ Page({
     .then(res=>{
 
       if(res.code===0){
-        this._setMarkerData(res.data);
+        this._renderMksWithCache(res.data);
       };
       this._resetSelMarkers();
     })
@@ -252,47 +247,5 @@ Page({
       url: `/pages/mark/mark?method=add`
     });
   },
-
-  // 用户在授权面板操作返回页面后调用
-  // 期望授权用户信息
-  // event 的 detail 参数为 bool
-  // true 代表取得了授权
-  // false 代表没取得授权
-  onGetAuth(event){
-    let {detail} = event;
-    if(!detail){
-      this.setData({
-        hasAuthUserInfo: false
-      });
-    }
-
-  },
-  // 显示添加 symbol 的 model
-  showAddModel(){
-
-    this.setData({
-      isShowAddingModel: true
-    });
-  },
-
-  // 取消条件 symbol
-  cancelAddSymbol(){
-    this.setData({
-      isShowAddingModel: false
-    });
-  },
-
-  // 绑定输入框的值
-  inputval(e){
-    let {detail, target} = e;
-    this.setData({
-      [target.dataset.name]: detail.value
-    })
-  },
-
-  //
-  getLocation(ev){
-
-  }
 
 })

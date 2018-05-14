@@ -2,8 +2,8 @@
 <view class="container">
 
   <!-- 用用户信息授权 -->
-  <block wx:if="{{hasAuthUserInfo && hasUserInfo}}">
-    <view class="profile_card_box">
+  <view class="profile_card_box">
+
       <button
         class="forward_button"
         plain
@@ -12,16 +12,31 @@
           <image class="forward_img" src="./imgs/forward.png"></image>
       </button>
 
-      <!-- 头像 -->
-      <view class="avatar_wrap">
-        <image
-          class="avatar" src="{{userInfo.avatarUrl}}"
-          mode="aspectFill"
-        />
-      </view>
 
-      <text class="title color_semi">{{userInfo.nickName}}</text>
-      <text class="desc color_light">{{userInfo.country}}</text>
+
+      <block wx:if="{{userInfo}}">
+        <!-- 头像 -->
+        <view class="avatar_wrap">
+          <image
+            class="avatar"
+            src="{{userInfo.avatarUrl}}"
+            mode="aspectFill"
+          />
+        </view>
+
+        <text class="title color_semi">{{userInfo.nickName}}</text>
+        <text class="desc color_light">{{userInfo.country}}</text>
+      </block>
+
+      <block wx:if="{{hasReqAuth && !userInfo && isSelf}}">
+        <view class="auth_wrap">
+          <image src="./imgs/user.png" mode="aspectFit"/>
+          <button
+            open-type="getUserInfo"
+            bindgetuserinfo="onGetUserinfo"
+          > 获取头像昵称 </button>
+        </view>
+      </block>
 
       <view
         class="goals"
@@ -120,9 +135,6 @@
       <!-- <view>+</view> -->
       <!-- + -->
     </view>
-
-  </block>
-
   <!-- 如果用户没有授权 -->
   <block wx:if="{{hasAuthUserInfo===false}}">
     <auth-page
@@ -130,34 +142,5 @@
       scope="userInfo"
     />
   </block>
-
-  <!-- 添加 marker 的 model -->
-
-  <view class="model_mask" wx:if="{{isShowAddingModel}}">
-    <view class="model">
-      <input
-        data-name="inputSymbolName"
-        type="text"
-        focus="{{true}}"
-        placeholder="输入标签名"
-        placeholder-style="color:#CFD5D9;"
-        cursor-spacing="100"
-        bindinput="inputval"
-        bindconfirm="addSymbol"
-      />
-      <view class="buttons_wrap">
-        <button
-          size="mini"
-          bind:tap="cancelAddSymbol"
-        >取消</button>
-        <button
-          type="primary"
-          size="mini"
-          bind:tap="addSymbol"
-        >确定</button>
-      </view>
-
-    </view>
-  </view>
 
 </view>
