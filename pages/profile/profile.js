@@ -9,8 +9,9 @@ const app = getApp();
 Page({
   selMarkers: [],
   data: {
-    hasReqAuth: false,
+    userID: '',
     isSelf: true, //是查看自己还是好友
+    hasReqAuth: false,
     userInfo: null,
     markers: [],
     // 是否切换为选择删除模式模式
@@ -28,55 +29,53 @@ Page({
     }
   },
 
-  onLoad(query){
-    this.query = query;
-    this.setData({
-      isSelf: !this.query.userID
+  onPullDownRefresh(){
+    let {userID, isSelf} = this.data;
+    this._renderProfile(userID, isSelf)
+    .then(()=>{
+      wx.stopPullDownRefresh();
     })
   },
 
-  // 页面显示时候
-  onShow(){
 
-    let {isSelf} = this.data;
+  onLoad(query){
+    this.query = query;
+    let isSelf = !this.query.userID;
+    this.setData({
+      isSelf,
+      userID: !isSelf ? this.query.userID : ''
+    });
 
     if(!isSelf){
-      req.getProfile(this.query.userID)
-      .then(({code, data})=>{
-        if(code===0){
-          this.setData({
-            userInfo: data.userInfo
-          });
-          this._renderMarkers(data.markers);
-        }
-      });
+      this._renderProfile(this.query.userID, isSelf);
     }else{
       // 初始化 marker 信息
+      // 渲染 markers
       req.checkLogin()
       .then(res=>{
-        if(res.code===0){
-          return wx.getStorageSync('userID');
+        let userID = wx.getStorageSync('userID');
+        let sessionID = wx.getStorageSync('sess-cookie');
+        if(res.code===0 && userID && sessionID){
+          return userID;
         }else{
           return req.login();
         }
       })
-      .then(userID=>isSelf? userID: this.query.userID)
-      .then(userID=>this._getMarkers(userID))
+      .then(userID=>{
+        this.setData({
+          userID
+        });
+        return this._getMarkers(userID);
+      })
       .then(mks=>{
-        if(isSelf){
-          this._renderMksWithCache(mks);
-        }else{
-          this._renderMarkers(mks);
-        }
+        this._renderMksWithCache(mks);
       });
 
       // start  auth
+      // 处理用户信息渲染
       auth.getAuth('userInfo')
       .then(hasAuth=>{
-
-
         let {userInfo} = app.globalData;
-
         if(hasAuth && userInfo){
           return userInfo;
         }else if(hasAuth && !userInfo){
@@ -85,10 +84,9 @@ Page({
         }else{
           return null;
         }
-
       })
       .then(userInfo=>{
-        console.log(userInfo);
+
         if(!userInfo){
           this.setData({
             hasReqAuth: true,
@@ -102,10 +100,36 @@ Page({
       })
       // end auth
     }
+  },
 
-
+  // 页面显示时候
+  onShow(){
+    let mks = wx.getStorageSync('markers');
+    if(mks){
+      this._renderMarkers(mks);
+    }
 
   },
+  _renderProfile(userID, isSelf){
+    wx.showNavigationBarLoading();
+    return req.getProfile(userID)
+    .then(({code, data})=>{
+      if(code===0){
+
+        wx.hideNavigationBarLoading();
+        this.setData({
+          userInfo: data.userInfo
+        });
+
+        if(isSelf){
+          this._renderMksWithCache(data.markers)
+        }else{
+          this._renderMarkers(data.markers);
+        }
+      }
+    });
+  },
+
   // 获取 markers
   _getMarkers(userID){
     return req.getMarkers(userID)
@@ -172,6 +196,7 @@ Page({
 
   // 手指停留开始多选
   onOpenChooseMark(e){
+    if(!this.data.isSelf) return;
     this.selMarkers = [e.currentTarget.id];
 
     let isSelAll = this.data.markers.length===1;
@@ -181,7 +206,6 @@ Page({
       curtSel: {[e.currentTarget.id]: true},
       isSelAll
     });
-
   },
   onCheckboxChange({detail}){
     this.selMarkers = detail.value;

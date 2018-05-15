@@ -8,10 +8,7 @@
 
 .profile_card_box{
   position: relative;
-  display: flex;
-  min-height: 300rpx;
-  flex-direction: column;
-  align-items: center;
+
   margin: 30rpx;
   margin-top: 0;
   background-color: #fff;
@@ -20,6 +17,14 @@
   overflow: hidden;
 
 }
+.profile_card_box .info_wrap{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 300rpx;
+
+}
+
 .profile_card_box .forward_button{
   width: 80rpx;
   height: 80rpx;
