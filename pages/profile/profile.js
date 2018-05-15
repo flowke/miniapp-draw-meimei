@@ -41,16 +41,14 @@ Page({
     let {isSelf} = this.data;
 
     if(!isSelf){
-      req.getProfile(wx.getStorageSync('userID'))
+      req.getProfile(this.query.userID)
       .then(({code, data})=>{
         if(code===0){
-          console.log(data);
           this.setData({
             userInfo: data.userInfo
           });
           this._renderMarkers(data.markers);
         }
-
       });
     }else{
       // 初始化 marker 信息
