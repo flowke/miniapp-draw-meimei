@@ -4,6 +4,10 @@ const req = require('../../api/req');
 const util = require('../../utils/util');
 const qqmapAPI =api.createQQMap('R4EBZ-JG43O-M67WY-SAGOA-ABUKV-IYFN7');
 
+// query
+// id: markerId
+// userID
+// method: check / add
 
 Page({
   // 所有的输入框的值
@@ -12,6 +16,8 @@ Page({
   query: {},
 
   data: {
+    isSelf: false,
+    userID: '',
     hasAuthLocation: true,
     showLocate: {},
     polyline: [],
@@ -39,6 +45,10 @@ Page({
   },
   onLoad(query){
     this.query = query;
+    this.setData({
+      isSelf: query.isSelf,
+      userID: query.userID
+    })
 
   },
 
@@ -50,18 +60,51 @@ Page({
       timingFunction: 'ease-out',
     });
 
-    if(this._isAddMarker()){
+    let {isSelf, userID, id:markerID} = this.query;
 
-      this._showDetailPanelByAdd();
+    if(isSelf){
+      let markers = wx.getStorageSync('markers');
 
-    }else if(this._isCheckCertainMarker()){
-      let {id} = this.query;
-      this._showDetailPanelByCheck(id, true);
+      if(markers){
+        this.setData({
+          markerData: markers
+        })
+      };
+
+      if(this._isAddMarker()){
+
+        this._showDetailPanelByAdd();
+
+      }else if(this._isCheckCertainMarker()){
+        let {id} = this.query;
+        this._showDetailPanelByCheck(id, markers, true);
 
 
-    }else if(this._isOnlyCheckInMap()){
+      }else if(this._isOnlyCheckInMap()){
 
-      this._toMyLocation();
+        this._toMyLocation();
+      }
+
+    }else{
+      req.getMarkers(userID)
+      .then(res=>{
+        if(res.code===0){
+          this.setData({
+            markerData: res.data
+          });
+          return res.data
+        }
+      })
+      .then(mks=>{
+        if(mks && this._isCheckCertainMarker()){
+          this._showDetailPanelByCheck(id, mks, true);
+        }else if(mks && this._isOnlyCheckInMap()){
+          this._toMyLocation();
+        }
+      });
+
+
+
     }
 
   },
@@ -70,13 +113,7 @@ Page({
 
     // 渲染 markers
 
-    let markers = wx.getStorageSync('markers');
 
-    if(markers){
-      this.setData({
-        markerData: markers
-      })
-    }
 
     auth('userLocation')
       .then(ret=>{
@@ -163,12 +200,11 @@ Page({
     this._renderDetailPanel(marker);
   },
   // 查看某个 marker 而打开
-  _showDetailPanelByCheck(id, isIncludePoints=false){
-
-    let markers = wx.getStorageSync('markers');
+  // isIncludePoints: 地图显示此 marker 区域
+  _showDetailPanelByCheck(id, mks, isIncludePoints=false){
 
     this._openDetail();
-    let marker = this._findMarkerByID(markers, id);
+    let marker = this._findMarkerByID(mks, id);
     this._renderDetailPanel(marker);
 
     if(isIncludePoints){
@@ -272,14 +308,15 @@ Page({
 
   // 点击 marker
   onMarkerTap({markerId}){
-    this._showDetailPanelByCheck(markerId);
+    let {markerData} = this.data;
+    this._showDetailPanelByCheck(markerId,markerData);
   },
 
   // 详情面板的编辑 -->
 
   // 改变 panel 显示的地址
   onChooseLocation(){
-
+    if(!this.data.isSelf) return;
     api.chooseLocation()
     .then(res=>{
       console.log(res);
@@ -325,6 +362,7 @@ Page({
     });
   },
   onDeleteMarker(){
+    if(!this.data.isSelf) return;
     let {markerID} = this.data.detailPanelInfo;
     api.showModal({
       content: '确定删除本记录么',
@@ -428,7 +466,7 @@ Page({
   // 打开事件编辑面板
   // 点击某个事件调用
   onEditIncident(e){
-
+    if(!this.data.isSelf) return;
     let {id} = e.currentTarget;
 
     let {detailPanelInfo} = this.data;
@@ -529,6 +567,7 @@ Page({
   },
 
   onDeleteIncident({currentTarget:el}){
+    if(!this.data.isSelf) return;
     let {id: eventID} = el;
     let {markerID} = this.data.detailPanelInfo;
     api.showModal({

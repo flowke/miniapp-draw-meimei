@@ -7,7 +7,7 @@
       <button
         class="forward_button"
         plain
-        bind:tap="f"
+        open-type="share"
       >
           <image class="forward_img" src="./imgs/forward.png"></image>
       </button>

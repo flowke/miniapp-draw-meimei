@@ -6,6 +6,9 @@ let p = 'https://pic.qqtn.com/up/2017-12/15138357828139708.jpg';
 
 const app = getApp();
 
+// query
+//   userID 有说明是查看
+
 Page({
   selMarkers: [],
   data: {
@@ -25,7 +28,7 @@ Page({
   onShareAppMessage({from, target}){
     return {
       title: '脚步与你',
-      path: '/pages/profile/profile'
+      path: `/pages/profile/profile?userID=${this.data.userID}`
     }
   },
 
@@ -176,19 +179,20 @@ Page({
 
   // 跳转到符号标记的地图页
   onGotoMark(e){
+    let {userID, isSelf} = this.data;
     api.navigateTo({
-      url: `/pages/mark/mark?method=check`
+      url: `/pages/mark/mark?method=check&userID=${userID}&isSelf=${isSelf}`
     });
   },
   // 根据 mark id 查看某个 mark 的详情
   onPlaceItemTap(e){
-    let {isMultiSel} = this.data;
+    let {isMultiSel,userID, isSelf} = this.data;
     if(isMultiSel){
 
     }else{
       let {id} = e.currentTarget;
       api.navigateTo({
-        url: `/pages/mark/mark?id=${id}&method=check`
+        url: `/pages/mark/mark?id=${id}&method=check&userID=${userID}&isSelf=${isSelf}`
       });
     }
 
@@ -265,8 +269,9 @@ Page({
 
   // 添加一个地点标记
   onAddMark(){
+    let {isSelf, userID} = this.data;
     api.navigateTo({
-      url: `/pages/mark/mark?method=add`
+      url: `/pages/mark/mark?method=add&isSelf=${isSelf}&userID=${userID}`
     });
   },
 
