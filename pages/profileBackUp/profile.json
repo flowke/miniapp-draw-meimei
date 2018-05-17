@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "auth-page": "/pages/components/auth/auth"
+  },
+  "enablePullDownRefresh": true
+}

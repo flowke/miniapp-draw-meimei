@@ -5,8 +5,9 @@
     "pages/mark/mark"
   ],
   "window": {
-    "backgroundTextStyle": "light",
+    "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#4B9EFD",
+    "backgroundColor": "#F2F9FE",
     "navigationBarTitleText": "足迹"
   },
   "tabBar": {
@@ -25,5 +26,8 @@
         "selectedIconPath": "image/emoji_fill.png"
       }
     ]
+  },
+  "networkTimeout": {
+    "request": 6000
   }
 }

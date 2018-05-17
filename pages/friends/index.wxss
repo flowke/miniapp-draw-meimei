@@ -20,8 +20,9 @@
   /* border: 2rpx solid #49ADDE; */
 }
 .avatar{
-  max-width: 100%;
-
+  /* max-width: 100%; */
+  width: 118rpx;
+  height: 118rpx;
 }
 
 /* 好友的信息 */

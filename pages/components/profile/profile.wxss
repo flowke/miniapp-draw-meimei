@@ -1,0 +1,201 @@
+.container{
+  min-height: 100%;
+  background-color: #F2F9FE;
+  padding: 20rpx 0;
+
+  /* background-color: red */
+}
+
+.profile_card_box{
+  position: relative;
+
+  margin: 30rpx;
+  margin-top: 0;
+  background-color: #fff;
+  box-shadow: 0 0 9rpx 3rpx rgba(0, 0, 0, 0.14);
+  border-radius: 10rpx;
+  overflow: hidden;
+
+}
+.profile_card_box .info_wrap{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 300rpx;
+
+}
+
+.profile_card_box .forward_button{
+  width: 80rpx;
+  height: 80rpx;
+  position: absolute;
+  right: 20rpx;
+  top: 10rpx;
+  background: none;
+  border:none;
+  padding: 0;
+}
+.profile_card_box .auth_wrap .get_info{
+  width: 60%;
+}
+.profile_card_box .auth_wrap .user_icon{
+  margin: 100rpx 0 20rpx;
+  height: 220rpx;
+}
+.profile_card_box .forward_img{
+  width: 100%;
+  height: 100%;
+}
+
+.profile_card_box .avatar_wrap{
+  width: 300rpx;
+  height: 300rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5rpx 20rpx 0 rgba(0,0,0, 0.16);
+  margin-top: 80rpx;
+  margin-bottom: 40rpx;
+}
+
+.profile_card_box .avatar{
+  width: 300rpx;
+  height: 300rpx;
+}
+.profile_card_box .title{
+  font-size: 18pt;
+  font-weight: bold;
+  margin-bottom: 6rpx;
+}
+.profile_card_box .desc{
+  font-size: 10pt;
+}
+
+.profile_card_box .goals{
+  margin-top: 30rpx;
+  height: 140rpx;
+  width: 100%;
+  background-color: #5CA8FA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.profile_card_box .goals .achievement{
+  width: 80%;
+  text-align: center;
+  font-size: 13pt;
+  background: #fff;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+  /* color: #fff; */
+}
+
+
+/* 地点列表 */
+.place_list{
+  margin: 30rpx;
+  padding: 30rpx;
+  /* min-height: 250rpx; */
+  background-color: #fff;
+  box-shadow: 0 0 9rpx 3rpx rgba(0, 0, 0, 0.14);
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+.place_list .hint_to_add{
+  text-align: center;
+  color: #CBD0D5;
+}
+.place_list .place_item{
+  display: flex;
+  font-size: 12pt;
+  line-height: 80rpx;
+  height: 80rpx;
+  color: #888888;
+  border-bottom: 1rpx solid #F1F1F1;
+}
+.place_list .place_item.title{
+  border-bottom: none;
+  color: #353535;
+  font-size: 14pt;
+  font-weight: bold;
+  justify-content: space-between;
+}
+.place_list .place_item.title .op{
+  color: #45AEEB;
+}
+
+.place_list .place_item .time{
+  flex: 2;
+}
+.place_list .place_item .place{
+  flex: 3;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.place_list .place_item .place_name{
+  /* background: blue; */
+  max-width: 6em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.place_list .place .spot{
+  color: #fff;
+  line-height: 1em;
+  margin-right: 50rpx;
+  background-color: #E65B5B;
+  padding: 12rpx 22rpx;
+  width: 1.5em;
+  text-align: center;
+  border-radius: 1em;
+  font-size: 10pt;
+  box-shadow: 2rpx 4rpx 5rpx 3rpx rgba(254, 24, 24, 0.20);
+}
+
+/* symbol 的标签盒子 */
+.done_tags_box{
+  margin: 30rpx;
+  margin-right: 20rpx;
+  display: flex;
+  /* justify-content: space-between; */
+  flex-wrap: wrap;
+}
+.done_tags_box .tag{
+  margin-right: 30rpx;
+  margin-bottom: 20rpx;
+  padding: 0 26rpx;
+  border: 1rpx solid #C9C8C8;
+  border-radius: 30rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 12pt;
+  color: #576269;
+  background-color: #FEFEFE;
+}
+
+/* 右下角添加按钮 */
+.add_button{
+  position: fixed;
+  right: 30rpx;
+  bottom: 50rpx;
+  width: 44pt;
+  height: 44pt;
+  background-color: #4B9EFD;
+  border-radius: 50%;
+  font-size: 26pt;
+  color: #fff;
+  box-shadow: 5rpx 6rpx 14rpx 1rpx rgba(74, 157, 252, 0.53);
+}
+/* .add_button navigator{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */

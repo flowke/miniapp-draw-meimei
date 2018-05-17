@@ -15,7 +15,7 @@ let post = (url, data)=>{
     method: 'POST',
     data,
   });
-}
+};
 
 let getWithCookie = (url, data)=>{
 
@@ -39,6 +39,8 @@ let postWithCookie = (url, data)=>{
   })
 
 };
+
+exports.getFriends = ()=> getWithCookie('/user/getFriends').then(res=>res.data)
 
 // 请求保存 mark
 exports.addMark = (data)=>postWithCookie('/mark/add', data);
