@@ -1,6 +1,8 @@
 const auth = require('../../api/auth');
 const api = require('../../helper/api');
 const req = require('../../api/req');
+const mix = require('../common/profile_mix');
+const path = require('../../api/path');
 
 let p = 'https://pic.qqtn.com/up/2017-12/15138357828139708.jpg';
 
@@ -13,7 +15,6 @@ Page({
   selMarkers: [],
   data: {
     userID: '',
-    isSelf: true, //是查看自己还是好友
     hasReqAuth: false,
     userInfo: null,
     markers: [],
@@ -25,84 +26,60 @@ Page({
     isSelAll: false,
   },
 
-  onShareAppMessage({from, target}){
-    return {
-      title: '脚步与你',
-      path: `/pages/profile/profile?userID=${this.data.userID}`
-    }
-  },
-
-  onPullDownRefresh(){
-    let {userID, isSelf} = this.data;
-    this._renderProfile(userID, isSelf)
-    .then(()=>{
-      wx.stopPullDownRefresh();
-    })
-  },
-
+  ...mix.methods,
+  ...mix.enents,
 
   onLoad(query){
-    this.query = query;
-    let isSelf = !this.query.userID;
-    this.setData({
-      isSelf,
-      userID: !isSelf ? this.query.userID : ''
+    // 初始化 marker 信息
+    // 渲染 markers
+    req.checkLogin()
+    .then(res=>{
+      let userID = wx.getStorageSync('userID');
+      let sessionID = wx.getStorageSync('sess-cookie');
+      if(res.code===0 && userID && sessionID){
+        return userID;
+      }else{
+        return req.login();
+      }
+    })
+    .then(userID=>{
+      this.setData({
+        userID
+      });
+      return this._getMarkers(userID);
+    })
+    .then(mks=>{
+      this._renderMksWithCache(mks);
     });
 
-    if(!isSelf){
-      this._renderProfile(this.query.userID, isSelf);
-    }else{
-      // 初始化 marker 信息
-      // 渲染 markers
-      req.checkLogin()
-      .then(res=>{
-        let userID = wx.getStorageSync('userID');
-        let sessionID = wx.getStorageSync('sess-cookie');
-        if(res.code===0 && userID && sessionID){
-          return userID;
-        }else{
-          return req.login();
-        }
-      })
-      .then(userID=>{
+    // start  auth
+    // 处理用户信息渲染
+    auth.getAuth('userInfo')
+    .then(hasAuth=>{
+      let {userInfo} = app.globalData;
+      if(hasAuth && userInfo){
+        return userInfo;
+      }else if(hasAuth && !userInfo){
+
+        return api.getUserInfo({withCredentials: true})
+        .then(ret=>ret.userInfo)
+      }else{
+        return null;
+      }
+    })
+    .then(userInfo=>{
+
+      if(!userInfo){
         this.setData({
-          userID
+          hasReqAuth: true,
         });
-        return this._getMarkers(userID);
-      })
-      .then(mks=>{
-        this._renderMksWithCache(mks);
-      });
-
-      // start  auth
-      // 处理用户信息渲染
-      auth.getAuth('userInfo')
-      .then(hasAuth=>{
-        let {userInfo} = app.globalData;
-        if(hasAuth && userInfo){
-          return userInfo;
-        }else if(hasAuth && !userInfo){
-          return api.getUserInfo({withCredentials: true})
-          .then(ret=>ret.userInfo)
-        }else{
-          return null;
-        }
-      })
-      .then(userInfo=>{
-
-        if(!userInfo){
-          this.setData({
-            hasReqAuth: true,
-          });
-        }else{
-          this.setData({
-            userInfo
-          });
-          app.updateGlobalUserInfo(userInfo)
-        }
-      })
-      // end auth
-    }
+      }else{
+        this.setData({
+          userInfo
+        });
+        app.updateGlobalUserInfo(userInfo)
+      }
+    })
   },
 
   // 页面显示时候
@@ -113,59 +90,9 @@ Page({
     }
 
   },
-  _renderProfile(userID, isSelf){
-    wx.showNavigationBarLoading();
-    return req.getProfile(userID)
-    .then(({code, data})=>{
-      if(code===0){
 
-        wx.hideNavigationBarLoading();
-        this.setData({
-          userInfo: data.userInfo
-        });
-
-        if(isSelf){
-          this._renderMksWithCache(data.markers)
-        }else{
-          this._renderMarkers(data.markers);
-        }
-      }
-    });
-  },
-
-  // 获取 markers
-  _getMarkers(userID){
-    return req.getMarkers(userID)
-    .then(res=>{
-      if(res.code!==0) console.log('没获取到 marker');
-      return res;
-    })
-    .then(({data, code})=>code===0? data : []);
-  },
-  // 缓存并渲染 marker,
-  _renderMksWithCache(mks){
-    // 缓存 markers
-    api.setStorage({
-      key: 'markers',
-      data: mks
-    });
-    this._renderMarkers(mks);
-  },
-  // 渲染 markers
-  _renderMarkers(mks){
-    this.setData({
-      markers: mks.map(elt=>{
-
-        return {
-          id: elt._id,
-          title: elt.title,
-          lastTime: elt.events.length && elt.events[0].time,
-          times: elt.events.length,
-        }
-      })
-    });
-  },
-
+  // 获取用户信息
+  // 如果是第一次, 会授权
   onGetUserinfo({detail}){
     if(!detail.userInfo) return;
     this.setData({
@@ -173,44 +100,24 @@ Page({
     });
     req.saveUserInfo(detail.userInfo)
     .then(res=>{
-      console.log(res);
+      console.log(res, 'saveUserInfo');
     })
   },
 
-  // 跳转到符号标记的地图页
-  onGotoMark(e){
-    let {userID, isSelf} = this.data;
-    api.navigateTo({
-      url: `/pages/mark/mark?method=check&userID=${userID}&isSelf=${isSelf}`
-    });
-  },
-  // 根据 mark id 查看某个 mark 的详情
-  onPlaceItemTap(e){
-    let {isMultiSel,userID, isSelf} = this.data;
-    if(isMultiSel){
-
-    }else{
-      let {id} = e.currentTarget;
-      api.navigateTo({
-        url: `/pages/mark/mark?id=${id}&method=check&userID=${userID}&isSelf=${isSelf}`
-      });
-    }
-
-  },
-
   // 手指停留开始多选
-  onOpenChooseMark(e){
-    if(!this.data.isSelf) return;
-    this.selMarkers = [e.currentTarget.id];
+  onOpenChooseMark({detail}){
+    this.selMarkers = [detail.mkID];
 
     let isSelAll = this.data.markers.length===1;
 
     this.setData({
       isMultiSel: true,
-      curtSel: {[e.currentTarget.id]: true},
+      curtSel: {[detail.mkID]: true},
       isSelAll
     });
   },
+
+  // 勾选要删除的
   onCheckboxChange({detail}){
     this.selMarkers = detail.value;
     let isSelAll = this.selMarkers.length===this.data.markers.length;
@@ -224,7 +131,7 @@ Page({
   },
   onToggleAll(){
 
-    let isSelAll = this.data.isSelAll;
+    let {isSelAll} = this.data;
     this.selMarkers =[];
     let curtSel = {};
     if(!isSelAll){
@@ -257,21 +164,16 @@ Page({
   onCancelSel(){
     this._resetSelMarkers();
   },
-  _resetSelMarkers(){
-    this.setData({
-      isMultiSel: false,
-      curtSel: {},
-      isSelAll: false,
-
-    });
-    this.selMarkers = [];
-  },
-
   // 添加一个地点标记
   onAddMark(){
     let {isSelf, userID} = this.data;
+    if(!userID) return;
     api.navigateTo({
-      url: `/pages/mark/mark?method=add&isSelf=${isSelf}&userID=${userID}`
+      url: path.url('/pages/mark/mark',{
+        method: 'add',
+        isSelf: true,
+        userID
+      })
     });
   },
 

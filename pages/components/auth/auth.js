@@ -7,6 +7,7 @@ Component({
       type: String
     }
   },
+
   methods: {
     onAuth(){
       // 确定期望授权的 scope

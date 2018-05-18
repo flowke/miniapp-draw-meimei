@@ -1,0 +1,8 @@
+<profile
+  is-self="{{false}}"
+  user-i-d="{{userID}}"
+  user-info="{{userInfo}}"
+  markers="{{markers}}"
+>
+
+</profile>

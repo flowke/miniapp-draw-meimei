@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "auth-page": "/pages/components/auth/auth"
+    "auth-page": "/pages/components/auth/auth",
+    "profile": "/pages/components/profile/profile"
   },
   "enablePullDownRefresh": true
 }

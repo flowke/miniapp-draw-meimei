@@ -44,12 +44,13 @@ Page({
     panelAniData: {},
   },
   onLoad(query){
-    this.query = query;
+    this.query = {
+      ...query,
+      isSelf: query.isSelf==='true'
+    };
     this.setData({
-      isSelf: query.isSelf,
-      userID: query.userID
+      isSelf: query.isSelf==='true'
     })
-
   },
 
   onReady(){
@@ -62,6 +63,7 @@ Page({
 
     let {isSelf, userID, id:markerID} = this.query;
 
+    // 如果是自己
     if(isSelf){
       let markers = wx.getStorageSync('markers');
 
@@ -76,8 +78,7 @@ Page({
         this._showDetailPanelByAdd();
 
       }else if(this._isCheckCertainMarker()){
-        let {id} = this.query;
-        this._showDetailPanelByCheck(id, markers, true);
+        this._showDetailPanelByCheck(markerID, markers, true);
 
 
       }else if(this._isOnlyCheckInMap()){
@@ -85,7 +86,9 @@ Page({
         this._toMyLocation();
       }
 
+    // 如果不是自己, 只是查看别人
     }else{
+
       req.getMarkers(userID)
       .then(res=>{
         if(res.code===0){
@@ -96,15 +99,15 @@ Page({
         }
       })
       .then(mks=>{
+        // 查看某个 marker
         if(mks && this._isCheckCertainMarker()){
-          this._showDetailPanelByCheck(id, mks, true);
+          this._showDetailPanelByCheck(markerID, mks, true);
+
+        // 只是进入地图
         }else if(mks && this._isOnlyCheckInMap()){
           this._toMyLocation();
         }
       });
-
-
-
     }
 
   },
@@ -112,8 +115,6 @@ Page({
   onShow(){
 
     // 渲染 markers
-
-
 
     auth('userLocation')
       .then(ret=>{
@@ -200,7 +201,9 @@ Page({
     this._renderDetailPanel(marker);
   },
   // 查看某个 marker 而打开
-  // isIncludePoints: 地图显示此 marker 区域
+  // isIncludePoints: 地图显示此 marker 图标区域
+  // id: markerId
+  // mks
   _showDetailPanelByCheck(id, mks, isIncludePoints=false){
 
     this._openDetail();

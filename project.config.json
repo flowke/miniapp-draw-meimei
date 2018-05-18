@@ -40,6 +40,12 @@
 					"name": "mark",
 					"pathName": "pages/mark/mark",
 					"query": "method=add"
+				},
+				{
+					"id": 1,
+					"name": "checkProfile",
+					"pathName": "pages/checkProfile/check-profile",
+					"query": "userID=5af97731f0183d20a1e32482"
 				}
 			]
 		}

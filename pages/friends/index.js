@@ -26,7 +26,7 @@ Page({
   },
   onCheckDetail({currentTarget}){
     let {id} = currentTarget;
-    wx.navigateTo({url: `/pages/profile/profile?userID=${id}`})
+    wx.navigateTo({url: `/pages/checkProfile/check-profile?userID=${id}`})
   }
 
 })

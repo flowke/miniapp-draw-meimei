@@ -22,7 +22,6 @@
               mode="aspectFill"
             />
           </view>
-
           <text class="title color_semi">{{userInfo.nickName}}</text>
           <text class="desc color_light">{{userInfo.country}}</text>
         </block>
@@ -121,19 +120,12 @@
       wx:else
     >
       <view class="hint_to_add" bind:tap="onAddMark">
-        还没有记录, 去添加~~
+        {{isSelf? "还没有记录, 点击去添加~~": "还没有记录~~"}}
       </view>
     </block>
   </view>
 
   <!-- 添加按钮 -->
-  <view
-    wx:if="{{isSelf}}"
-    class="add_button"
-    catch:tap="onAddMark"
-  >
-      <!-- <view>+</view> -->
-      <!-- + -->
-  </view>
+  <slot name="addMark"></slot>
 
 </view>
