@@ -10,23 +10,28 @@ Page({
     friends: []
   },
   onLoad(){
-    req.getFriends()
-    .then(res=>{
-      this.setData({
-        friends: res.data.map(user=>{
-          return {
-            id:user._id,
-            avatar: user.userInfo.avatarUrl,
-            name: user.userInfo.nickName,
-            time: user.updatedAt
-          }
-        })
-      })
-    })
+    this._renderFriends();
   },
   onCheckDetail({currentTarget}){
     let {id} = currentTarget;
     wx.navigateTo({url: `/pages/checkProfile/check-profile?userID=${id}`})
-  }
+  },
 
+  onPullDownRefresh(){
+    this._renderFriends()
+    .then(()=>{
+      wx.stopPullDownRefresh();
+    });
+  },
+
+  _renderFriends(){
+    return req.getFriends()
+    .then(res=>{
+      if(res.code===0){
+        this.setData({
+          friends: res.data
+        });
+      }
+    })
+  }
 })

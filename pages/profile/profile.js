@@ -27,9 +27,9 @@ Page({
   },
 
   ...mix.methods,
-  ...mix.enents,
+  ...mix.events,
 
-  onLoad(query){
+  onLoad(){
     // 初始化 marker 信息
     // 渲染 markers
     req.checkLogin()

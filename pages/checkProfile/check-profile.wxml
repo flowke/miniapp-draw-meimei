@@ -5,4 +5,23 @@
   markers="{{markers}}"
 >
 
+  <view
+    class="tabBar color_semi"
+    slot="checkProfileTabBar"
+  >
+    <view
+      bind:tap="onGotoHome"
+    >
+      <image src="./img/list.png"/>
+      返回首页
+    </view>
+    <view
+      bind:tap="onCollect"
+    >
+      <image wx:if="{{hasCollect}}" src="./img/collect_fill.png"/>
+      <image wx:else src="./img/collect.png"/>
+      收藏
+    </view>
+  </view>
+
 </profile>

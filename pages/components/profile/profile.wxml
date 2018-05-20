@@ -128,4 +128,6 @@
   <!-- 添加按钮 -->
   <slot name="addMark"></slot>
 
+  <!-- check profile 的收藏bar -->
+  <slot name="checkProfileTabBar"></slot>
 </view>

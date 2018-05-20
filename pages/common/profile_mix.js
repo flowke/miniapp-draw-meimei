@@ -2,7 +2,7 @@ const auth = require('../../api/auth');
 const api = require('../../helper/api');
 const req = require('../../api/req');
 module.exports = {
-  enents: {
+  events: {
     onShareAppMessage({from, target}){
       return {
         title: '脚步与你',

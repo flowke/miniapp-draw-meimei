@@ -1,6 +1,6 @@
 const api = require('../helper/api');
 
-const baseURL = 'http://192.168.11.10:3000'
+const baseURL = 'http://192.168.0.9:3000'
 
 let get = (url, data)=>{
 
@@ -19,22 +19,47 @@ let post = (url, data)=>{
 
 let getWithCookie = (url, data)=>{
 
-  return api.request({
-    url: baseURL + url,
-    data,
-    header: {
-      cookie: wx.getStorageSync('sess-cookie')
+  function request() {
+    return api.request({
+      url: baseURL + url,
+      data,
+      header: {
+        cookie: wx.getStorageSync('sess-cookie')
+      }
+    });
+  }
+
+  return request(url, data)
+  .then(res=>{
+    if(res.data.code===444){
+      return exports.login()
+      .then(res=>request(url, data))
+    }else{
+      return res
     }
-  });
+  })
+
 };
 let postWithCookie = (url, data)=>{
 
-  return api.request({
-    url: baseURL + url,
-    data,
-    method: 'POST',
-    header: {
-      cookie: wx.getStorageSync('sess-cookie')
+  function request(url, data) {
+    return api.request({
+      url: baseURL + url,
+      data,
+      method: 'POST',
+      header: {
+        cookie: wx.getStorageSync('sess-cookie')
+      }
+    });
+  }
+
+  return request(url, data)
+  .then(res=>{
+    if(res.data.code===444){
+      return exports.login()
+      .then(res=>request(url, data))
+    }else{
+      return res
     }
   })
 
@@ -57,6 +82,10 @@ exports.deleteMark = (data)=>postWithCookie('/mark/delete', data).then(res=>res.
 exports.getMarkers = (userID)=>getWithCookie('/mark/get', {userID}).then(res=>res.data);
 
 // 登陆
+// {
+//   code: 0,
+//   id: userID
+// }
 exports.login = (msg='登陆中')=>{
   return api.showLoading({
     title: msg,
@@ -69,11 +98,11 @@ exports.login = (msg='登陆中')=>{
     });
   })
   .then(res=>{
-    let {data:{data}, header} = res;
-    wx.setStorageSync('userID', data._id);
+    let {data, header} = res;
+    wx.setStorageSync('userID', data.id);
     wx.setStorageSync('sess-cookie', header['Set-Cookie']);
     wx.hideLoading();
-    return data._id;
+    return data.id;
   });
 }
 // {
@@ -135,7 +164,40 @@ exports.deleteEvent = data=>{
     .then(res=>res.data)
 }
 
+//
+// {code:0}
+// code: 1 , 登录失效
+// code: 444, 登录失效
 exports.checkLogin = ()=>{
   return postWithCookie('/user/checkLogin')
     .then(res=>res.data)
+}
+
+exports.collect=(personID)=>{
+  return postWithCookie('/user/collect',{
+    personID
+  })
+    .then(res=>res.data)
+}
+exports.delCollect=(personID)=>{
+  return postWithCookie('/user/delCollect',{
+    personID
+  })
+    .then(res=>res.data)
+}
+
+// {
+//   code: 0,
+//   hasCollect: true
+// }
+// {
+//   code: 1,
+//   hasCollect: false
+// }
+//
+exports.checkCollect=(personID)=>{
+  return postWithCookie('/user/checkCollect',{
+    personID
+  })
+  .then(res=>res.data)
 }

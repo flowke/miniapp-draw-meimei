@@ -1,0 +1,23 @@
+.tabBar{
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  width: 100%;
+  height: 100rpx;
+  background: #fff;
+  font-size: 12pt;
+  box-shadow: 0 -1rpx 1rpx rgba(3, 3, 3, 0.04);
+}
+
+.tabBar view {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* vertical-align: middle; */
+}
+.tabBar image {
+  width: 44rpx;
+  height: 44rpx;
+  margin-right: 8rpx;
+}

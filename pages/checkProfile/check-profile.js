@@ -10,6 +10,7 @@ Page({
     userID: '',
     userInfo: null,
     markers: [],
+    hasCollect: false
   },
 
   onLoad(query){
@@ -18,9 +19,40 @@ Page({
       userID
     });
     this._renderProfile(userID, false);
+    req.checkCollect(userID)
+    .then(res=>{
+      this.setData({
+        hasCollect: res.hasCollect
+      })
+    })
+
   },
 
   ...mix.methods,
-  ...mix.enents,
+  ...mix.events,
 
+  onGotoHome(){
+    wx.switchTab({
+      url: path.url('/pages/profile/profile')
+    })
+  },
+
+  onCollect(){
+    let {userID, hasCollect} = this.data;
+
+    req.checkLogin()
+    .then(res=>{
+      return res.code!==0 ? req.login() : userID
+    })
+    .then(id=>{
+      return !hasCollect? req.collect(userID) : req.delCollect(userID);
+    })
+    .then(res=>{
+      if(res.code===0){
+        this.setData({
+          hasCollect: !hasCollect
+        })
+      }
+    })
+  }
 })

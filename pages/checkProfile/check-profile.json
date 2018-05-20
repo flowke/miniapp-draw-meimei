@@ -1,5 +1,6 @@
 {
   "usingComponents": {
     "profile": "/pages/components/profile/profile"
-  }
+  },
+  "enablePullDownRefresh": true
 }

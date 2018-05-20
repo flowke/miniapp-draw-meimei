@@ -6,19 +6,19 @@
     wx:for="{{friends}}"
     wx:key="id"
     bind:tap="onCheckDetail"
-    id="{{item.id}}"
+    id="{{item._id}}"
   >
     <view class="avatar_wrap">
       <image
-        src="{{item.avatar}}"
+        src="{{item.userInfo.avatarUrl}}"
         class="avatar"
         mode="widthFix"
       />
     </view>
 
     <view class="meta">
-      <view class="meta_title">{{item.name}}</view>
-      <view class="meta_desc">{{item.time}}</view>
+      <view class="meta_title">{{item.userInfo.nickName}}</view>
+      <view class="meta_desc">已经去过{{item.sizeOfMarkers}}处</view>
     </view>
   </view>
 </view>
