@@ -55,10 +55,17 @@
   top: 30rpx;
   width: 50rpx;
   height: 50rpx;
+  background-color: #FF4E4E;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1rpx solid #EB3F3F;
+
 }
 .info_panel .cancel_cross image{
-  width: 100%;
-  height: 100%;
+  width: 76%;
+  height: 76%;
 }
 
 .info_panel .header_img{

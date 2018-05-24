@@ -1,8 +1,11 @@
 <!-- 如果用户没有授权 -->
 
 <view class="auth_wrap">
+  <text
+    class="desc"
+  >请您授权{{hintString}}, 以便获得更好的服务</text>
   <button
     type= "primary"
     catch:tap="onAuth"
-  >请授权使用</button>
+  >去设置</button>
 </view>

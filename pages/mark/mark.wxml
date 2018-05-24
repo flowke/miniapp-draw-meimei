@@ -16,7 +16,7 @@
 
       <view class="header_img">
         <image
-          src="https://images.unsplash.com/photo-1507082529-e5ebd28d8ea1?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=f5850d6d4cc2a6e1f61a4aa1c8171187&auto=format&fit=crop&w=2767&q=80"
+          src="https://images.unsplash.com/photo-1514828260103-1e9bf9a58446?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=f36a98f5f1b150a523b924915c1544a5&auto=format&fit=crop&w=2700&q=80"
           class=""
         />
       </view>
@@ -28,7 +28,7 @@
             catch:tap="onChooseLocation"
             catch:longpress="onDeleteMarker"
           >
-          <text>{{detailPanelInfo.title}}</text>
+          <text>{{detailPanelInfo.title || '暂无地址'}}</text>
         </view>
 
         <view
@@ -36,7 +36,7 @@
           catch:tap="onChooseLocation"
           catch:longpress="onDeleteMarker"
         >
-          <text>{{detailPanelInfo.address}}</text>
+          <text>{{detailPanelInfo.address || '暂无详细地址'}}</text>
         </view>
 
         <view
@@ -153,6 +153,7 @@
   <block wx:if="{{!hasAuthLocation}}">
     <auth-page
       scope="userLocation"
+      hint-string="位置"
       bind:getAuth="getAuth"
     />
   </block>

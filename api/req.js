@@ -99,6 +99,7 @@ exports.login = (msg='登陆中')=>{
   })
   .then(res=>{
     let {data, header} = res;
+    console.log(data,'用户');
     wx.setStorageSync('userID', data.id);
     wx.setStorageSync('sess-cookie', header['Set-Cookie']);
     wx.hideLoading();

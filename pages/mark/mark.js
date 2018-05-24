@@ -119,18 +119,18 @@ Page({
     auth('userLocation')
       .then(ret=>{
         console.log('授权了地址');
-        api.getLocation({ type: 'gcj02'})
-          .then(({latitude, longitude})=>{
-
-            this.setData({
-              showLocate: {
-                latitude, longitude
-              }
-            });
-          })
-          .catch(e=>{
-            console.log(e);
-          });
+        // api.getLocation({ type: 'gcj02'})
+        //   .then(({latitude, longitude})=>{
+        //
+        //     this.setData({
+        //       showLocate: {
+        //         latitude, longitude
+        //       }
+        //     });
+        //   })
+        //   .catch(e=>{
+        //     console.log(e);
+        //   });
         this.setData({
           hasAuthLocation: true
         });
@@ -288,7 +288,7 @@ Page({
   // 当从授权页面回了
   // 检查有没有地址授权
   getAuth({detail}){
-
+    console.log(detail);
     if(detail){
       this.setData({
         hasAuthLocation: true
@@ -366,6 +366,7 @@ Page({
   },
   onDeleteMarker(){
     if(!this.data.isSelf) return;
+    if(!this.data.detailPanelInfo.markerID) return;
     let {markerID} = this.data.detailPanelInfo;
     api.showModal({
       content: '确定删除本记录么',
@@ -375,11 +376,12 @@ Page({
       if(!res.cancel){
         req.deleteMark({ids:[markerID]})
         .then(res=>{
-          if(re.code===0){
+          if(res.code===0){
+
             this._closeDetail();
-            wx.setStorageSync('markers', res.markers);
+            wx.setStorageSync('markers', res.data);
             this.setData({
-              markerData: res.markers
+              markerData: res.data
             });
           };
         })
@@ -570,25 +572,41 @@ Page({
   },
 
   onDeleteIncident({currentTarget:el}){
+    let {markerID, incidents} = this.data.detailPanelInfo;
     if(!this.data.isSelf) return;
+
     let {id: eventID} = el;
-    let {markerID} = this.data.detailPanelInfo;
     api.showModal({
       content: '确定要删除这个事件么'
     })
     .then(res=>{
       if(!res.cancel){
-        req.deleteEvent({
-          eventID,
-          markerID
-        })
-        .then(res=>{
-          if(res.code===0){
-            this._updDetailPanelAfterReq(res.data, markerID)
-          }
-        });
+        // 有markerID, 删除已经持久化的数据
+        // 否则删除本地 data 的数据
+        if(markerID){
+          req.deleteEvent({
+            eventID,
+            markerID
+          })
+          .then(res=>{
+            if(res.code===0){
+              this._updDetailPanelAfterReq(res.data, markerID)
+            }
+          });
+        }else{
+          this.setData({
+            detailPanelInfo: {
+              ...this.data.detailPanelInfo,
+              incidents: incidents.filter(event=>event._id!==eventID)
+            }
+          })
+        }
       };
     })
+
+
+
+
 
 
   },

@@ -1,24 +1,42 @@
 <!--index.wxml-->
-<view class="container">
-
-  <view
-    class="list_item"
-    wx:for="{{friends}}"
-    wx:key="id"
-    bind:tap="onCheckDetail"
-    id="{{item._id}}"
+<view
+  class="container"
+  wx:if="{{hasInitLoad}}"
+>
+  <block
+    wx:if="{{friends.length}}"
   >
-    <view class="avatar_wrap">
-      <image
-        src="{{item.userInfo.avatarUrl}}"
-        class="avatar"
-        mode="widthFix"
-      />
-    </view>
+    <view
+      class="list_item"
+      wx:for="{{friends}}"
+      wx:key="id"
+      bind:tap="onCheckDetail"
+      id="{{item._id}}"
+    >
+      <view class="avatar_wrap">
+        <image
+          src="{{item.userInfo.avatarUrl}}"
+          class="avatar"
+          mode="widthFix"
+        />
+      </view>
 
-    <view class="meta">
-      <view class="meta_title">{{item.userInfo.nickName}}</view>
-      <view class="meta_desc">已经去过{{item.sizeOfMarkers}}处</view>
+      <view class="meta">
+        <view class="meta_title">{{item.userInfo.nickName}}</view>
+        <view class="meta_desc">已经去过{{item.sizeOfMarkers}}处</view>
+      </view>
     </view>
+  </block>
+  <view
+    wx:else
+    class="toShare"
+  >
+    <button
+      open-type="share"
+    >
+      还没有好友, 分享给好友~~
+    </button>
+
   </view>
+
 </view>
