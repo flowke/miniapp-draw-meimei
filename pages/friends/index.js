@@ -58,6 +58,7 @@ Page({
     wx.showNavigationBarLoading();
     return req.getFriends()
     .then(res=>{
+      console.log(res);
       if(res.code===0){
         this.setData({
           friends: res.data,

@@ -15,6 +15,8 @@ Page({
   selMarkers: [],
   data: {
     userID: '',
+    // 指示是否已经进行过授权检测
+    // 在没有结果前, 用户信息处于loading状态
     hasReqAuth: false,
     userInfo: null,
     markers: [],
@@ -32,16 +34,7 @@ Page({
   onLoad(){
     // 初始化 marker 信息
     // 渲染 markers
-    req.checkLogin()
-    .then(res=>{
-      let userID = wx.getStorageSync('userID');
-      let sessionID = wx.getStorageSync('sess-cookie');
-      if(res.code===0 && userID && sessionID){
-        return userID;
-      }else{
-        return req.login();
-      }
-    })
+    req.login()
     .then(userID=>{
       this.setData({
         userID
@@ -95,12 +88,20 @@ Page({
   // 如果是第一次, 会授权
   onGetUserinfo({detail}){
     if(!detail.userInfo) return;
-    this.setData({
-      userInfo: detail.userInfo
-    });
+
     req.saveUserInfo(detail.userInfo)
     .then(res=>{
-      console.log(res, 'saveUserInfo');
+      console.log(res, 'userIndo');
+      this.setData({
+        userInfo: detail.userInfo
+      });
+    })
+    .catch(e=>{
+      wx.showModal({
+        content: "可能出现了网络错误, 请重新获取试试.",
+        showCancel: false
+      })
+      console.log(e);
     })
   },
 
