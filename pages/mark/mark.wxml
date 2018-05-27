@@ -125,8 +125,11 @@
       <map
         id="map"
         class="map"
-        show-location="{{true}}"
+        longitude="{{showLocate.longitude}}"
+        latitude="{{showLocate.latitude}}"
+        show-location
         bindmarkertap="onMarkerTap"
+        bindcallouttap="onMarkerTap"
         markers="{{tool.createMarkers(markerData)}}"
       >
         <!-- 回到当前定位 -->

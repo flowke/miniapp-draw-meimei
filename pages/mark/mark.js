@@ -19,7 +19,10 @@ Page({
     isSelf: false,
     userID: '',
     hasAuthLocation: true,
-    showLocate: {},
+    showLocate: {
+      longitude: 116,
+      latitude: 40
+    },
     polyline: [],
     markerData:[],
     includePoints: {points:[]},
@@ -61,7 +64,8 @@ Page({
       timingFunction: 'ease-out',
     });
 
-    let {isSelf, userID, id:markerID} = this.query;
+    let { id:markerID} = this.query;
+    let { isSelf, userID, }= this.data;
 
     // 如果是自己
     if(isSelf){
@@ -74,7 +78,6 @@ Page({
       };
 
       if(this._isAddMarker()){
-
         this._showDetailPanelByAdd();
 
       }else if(this._isCheckCertainMarker()){
@@ -82,7 +85,6 @@ Page({
 
 
       }else if(this._isOnlyCheckInMap()){
-
         this._toMyLocation();
       }
 
@@ -119,18 +121,20 @@ Page({
     auth('userLocation')
       .then(ret=>{
         console.log('授权了地址');
-        // api.getLocation({ type: 'gcj02'})
-        //   .then(({latitude, longitude})=>{
-        //
-        //     this.setData({
-        //       showLocate: {
-        //         latitude, longitude
-        //       }
-        //     });
-        //   })
-        //   .catch(e=>{
-        //     console.log(e);
-        //   });
+        api.getLocation({ type: 'gcj02'})
+          .then(({latitude, longitude})=>{
+
+            // longitude="{{showLocate.longitude}}"
+            // latitude="{{showLocate.latitude}}"
+            this.setData({
+              showLocate: {
+                latitude, longitude
+              }
+            });
+          })
+          .catch(e=>{
+            console.log(e);
+          });
         this.setData({
           hasAuthLocation: true
         });
@@ -141,7 +145,6 @@ Page({
           hasAuthLocation: false
         });
         console.log('没有地址授权');
-
       });
   },
   // 进入地图页面的情景 -->
@@ -299,6 +302,7 @@ Page({
   // 去到自己的位置
   _toMyLocation(){
     this.mapctx.moveToLocation();
+    console.log('msto');
   },
 
   onToMyLocation(){
@@ -310,9 +314,9 @@ Page({
   },
 
   // 点击 marker
-  onMarkerTap({markerId}){
+  onMarkerTap(ev){
     let {markerData} = this.data;
-    this._showDetailPanelByCheck(markerId,markerData);
+    this._showDetailPanelByCheck(ev.markerId,markerData);
   },
 
   // 详情面板的编辑 -->
