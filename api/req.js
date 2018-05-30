@@ -1,6 +1,8 @@
 const api = require('../helper/api');
 
-const baseURL = 'http://192.168.0.9:3000'
+const baseURL = 'http://tracks.noods.me';
+
+// const baseURL = 'http://192.168.0.9:3000';
 
 let get = (url, data)=>{
 
